@@ -1,0 +1,22 @@
+{
+  "extension.displayName": "Go Struct Tags Manager",
+  "extension.description": "Go の構造体フィールドタグの構文強調表示、並び替え、位置揃えを行います。",
+  "config.title": "Go Struct Tags Manager",
+  "config.autoSortOnSave.description": "ファイル保存時に構造体フィールドタグを自動的に並び替えます。",
+  "config.sortMode.description": "並び替え時のタグキーの標準順序を決定する方法。",
+  "config.sortMode.firstField": "順序は最初の構造体フィールドから導出されます — そこに現れるキーが先頭となり、残りは最初に現れた順に続きます。",
+  "config.sortMode.alphabetical": "すべてのキーをアルファベット順に並び替えます（sortPriority 適用後）。",
+  "config.sortPriority.description": "sortMode に関係なく、常に最初に配置するタグキー（指定された順序）。例：[\"json\", \"yaml\"]。",
+  "config.autoAlignOnSave.description": "ファイル保存時に構造体フィールドタグを自動的に位置揃えします。",
+  "config.colors.key.description": "タグキー（json、yaml など）の色を上書きします。テーマの色を使用するには空にしてください。",
+  "config.colors.value.description": "タグ値の色を上書きします。テーマの色を使用するには空にしてください。",
+  "config.colors.option.description": "タグオプション（= の後）の色を上書きします。テーマの色を使用するには空にしてください。",
+  "config.colors.separator.description": "タグセパレータ（,）の色を上書きします。テーマの色を使用するには空にしてください。",
+  "command.category": "Go Struct Tags Manager",
+  "command.sortTags.title": "構造体フィールドタグを並び替え",
+  "command.alignTags.title": "構造体フィールドタグを位置揃え",
+  "command.sortAndAlignTags.title": "構造体フィールドタグを並び替え & 位置揃え",
+  "command.sortTagsAll.title": "ファイル内の構造体フィールドタグを並び替え",
+  "command.alignTagsAll.title": "ファイル内の構造体フィールドタグを位置揃え",
+  "command.sortAndAlignTagsAll.title": "ファイル内の構造体フィールドタグを並び替え & 位置揃え"
+}

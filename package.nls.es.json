@@ -1,0 +1,22 @@
+{
+  "extension.displayName": "Go Struct Tags Manager",
+  "extension.description": "Resaltado de sintaxis, ordenación y alineación de etiquetas de campos de structs en Go.",
+  "config.title": "Go Struct Tags Manager",
+  "config.autoSortOnSave.description": "Ordenar automáticamente las etiquetas de campos de struct al guardar.",
+  "config.sortMode.description": "Cómo determinar el orden canónico de las claves de etiquetas al ordenar.",
+  "config.sortMode.firstField": "El orden se deriva del primer campo del struct — las claves que aparecen allí van primero, el resto sigue en el orden en que se encuentran por primera vez.",
+  "config.sortMode.alphabetical": "Todas las claves se ordenan alfabéticamente (después de aplicar sortPriority).",
+  "config.sortPriority.description": "Claves de etiquetas que siempre se colocan primero, en el orden especificado, independientemente de sortMode. Ejemplo: [\"json\", \"yaml\"].",
+  "config.autoAlignOnSave.description": "Alinear automáticamente las etiquetas de campos de struct al guardar.",
+  "config.colors.key.description": "Color para las claves de etiquetas (p. ej. json, yaml). Dejar vacío para usar el color del tema.",
+  "config.colors.value.description": "Color para los valores de etiquetas. Dejar vacío para usar el color del tema.",
+  "config.colors.option.description": "Color para las opciones de etiquetas (después de =). Dejar vacío para usar el color del tema.",
+  "config.colors.separator.description": "Color para los separadores de etiquetas (,). Dejar vacío para usar el color del tema.",
+  "command.category": "Go Struct Tags Manager",
+  "command.sortTags.title": "Ordenar etiquetas de campos de struct",
+  "command.alignTags.title": "Alinear etiquetas de campos de struct",
+  "command.sortAndAlignTags.title": "Ordenar y alinear etiquetas de campos de struct",
+  "command.sortTagsAll.title": "Ordenar etiquetas de campos de struct en el archivo",
+  "command.alignTagsAll.title": "Alinear etiquetas de campos de struct en el archivo",
+  "command.sortAndAlignTagsAll.title": "Ordenar y alinear etiquetas de campos de struct en el archivo"
+}

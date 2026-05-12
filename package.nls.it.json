@@ -1,0 +1,22 @@
+{
+  "extension.displayName": "Go Struct Tags Manager",
+  "extension.description": "Evidenziazione della sintassi, ordinamento e allineamento dei tag dei campi di struct in Go.",
+  "config.title": "Go Struct Tags Manager",
+  "config.autoSortOnSave.description": "Ordina automaticamente i tag dei campi di struct al salvataggio.",
+  "config.sortMode.description": "Come determinare l'ordine canonico delle chiavi dei tag durante l'ordinamento.",
+  "config.sortMode.firstField": "L'ordine è derivato dal primo campo della struct — le chiavi presenti lì vengono prima, le altre seguono nell'ordine in cui appaiono per la prima volta.",
+  "config.sortMode.alphabetical": "Tutte le chiavi sono ordinate alfabeticamente (dopo aver applicato sortPriority).",
+  "config.sortPriority.description": "Chiavi dei tag che vengono sempre collocate per prime, nell'ordine specificato, indipendentemente da sortMode. Esempio: [\"json\", \"yaml\"].",
+  "config.autoAlignOnSave.description": "Allinea automaticamente i tag dei campi di struct al salvataggio.",
+  "config.colors.key.description": "Colore per le chiavi dei tag (es. json, yaml). Lasciare vuoto per usare il colore del tema.",
+  "config.colors.value.description": "Colore per i valori dei tag. Lasciare vuoto per usare il colore del tema.",
+  "config.colors.option.description": "Colore per le opzioni dei tag (dopo =). Lasciare vuoto per usare il colore del tema.",
+  "config.colors.separator.description": "Colore per i separatori dei tag (,). Lasciare vuoto per usare il colore del tema.",
+  "command.category": "Go Struct Tags Manager",
+  "command.sortTags.title": "Ordina tag dei campi di struct",
+  "command.alignTags.title": "Allinea tag dei campi di struct",
+  "command.sortAndAlignTags.title": "Ordina e allinea tag dei campi di struct",
+  "command.sortTagsAll.title": "Ordina tag dei campi di struct nel file",
+  "command.alignTagsAll.title": "Allinea tag dei campi di struct nel file",
+  "command.sortAndAlignTagsAll.title": "Ordina e allinea tag dei campi di struct nel file"
+}

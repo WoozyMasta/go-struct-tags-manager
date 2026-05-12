@@ -1,0 +1,22 @@
+{
+  "extension.displayName": "Go Struct Tags Manager",
+  "extension.description": "Go 结构体字段标签的语法高亮、排序与对齐。",
+  "config.title": "Go Struct Tags Manager",
+  "config.autoSortOnSave.description": "保存文件时自动对结构体字段标签进行排序。",
+  "config.sortMode.description": "排序时确定标签键规范顺序的方式。",
+  "config.sortMode.firstField": "顺序来源于第一个结构体字段——该字段中出现的键排在前面，其余键按首次出现的顺序依次排列。",
+  "config.sortMode.alphabetical": "所有键按字母顺序排序（在应用 sortPriority 之后）。",
+  "config.sortPriority.description": "无论 sortMode 如何，始终按指定顺序排在最前面的标签键。示例：[\"json\", \"yaml\"]。",
+  "config.autoAlignOnSave.description": "保存文件时自动对结构体字段标签进行对齐。",
+  "config.colors.key.description": "标签键（如 json、yaml）的颜色覆盖。留空则使用主题颜色。",
+  "config.colors.value.description": "标签值的颜色覆盖。留空则使用主题颜色。",
+  "config.colors.option.description": "标签选项（= 之后）的颜色覆盖。留空则使用主题颜色。",
+  "config.colors.separator.description": "标签分隔符（,）的颜色覆盖。留空则使用主题颜色。",
+  "command.category": "Go Struct Tags Manager",
+  "command.sortTags.title": "排序结构体字段标签",
+  "command.alignTags.title": "对齐结构体字段标签",
+  "command.sortAndAlignTags.title": "排序并对齐结构体字段标签",
+  "command.sortTagsAll.title": "排序文件中的结构体字段标签",
+  "command.alignTagsAll.title": "对齐文件中的结构体字段标签",
+  "command.sortAndAlignTagsAll.title": "排序并对齐文件中的结构体字段标签"
+}

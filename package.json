@@ -1,0 +1,157 @@
+{
+  "name": "go-struct-tags-manager",
+  "author": "WoozyMasta",
+  "displayName": "%extension.displayName%",
+  "description": "%extension.description%",
+  "version": "0.1.0",
+  "publisher": "woozy-masta",
+  "icon": "resources/icon.png",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/WoozyMasta/go-struct-tags-manager"
+  },
+  "engines": {
+    "vscode": "^1.105.1"
+  },
+  "categories": [
+    "Other",
+    "Formatters"
+  ],
+  "activationEvents": [
+    "onLanguage:go"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "configuration": {
+      "title": "%config.title%",
+      "properties": {
+        "goStructTags.autoSortOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.autoSortOnSave.description%"
+        },
+        "goStructTags.sortMode": {
+          "type": "string",
+          "enum": [
+            "first-field",
+            "alphabetical"
+          ],
+          "enumDescriptions": [
+            "%config.sortMode.firstField%",
+            "%config.sortMode.alphabetical%"
+          ],
+          "default": "first-field",
+          "description": "%config.sortMode.description%"
+        },
+        "goStructTags.sortPriority": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          },
+          "default": [],
+          "description": "%config.sortPriority.description%"
+        },
+        "goStructTags.autoAlignOnSave": {
+          "type": "boolean",
+          "default": false,
+          "description": "%config.autoAlignOnSave.description%"
+        },
+        "goStructTags.colors.key": {
+          "type": "string",
+          "default": "",
+          "description": "%config.colors.key.description%"
+        },
+        "goStructTags.colors.value": {
+          "type": "string",
+          "default": "",
+          "description": "%config.colors.value.description%"
+        },
+        "goStructTags.colors.option": {
+          "type": "string",
+          "default": "",
+          "description": "%config.colors.option.description%"
+        },
+        "goStructTags.colors.separator": {
+          "type": "string",
+          "default": "",
+          "description": "%config.colors.separator.description%"
+        }
+      }
+    },
+    "commands": [
+      {
+        "command": "goStructTags.sortTags",
+        "title": "%command.sortTags.title%",
+        "category": "%command.category%"
+      },
+      {
+        "command": "goStructTags.alignTags",
+        "title": "%command.alignTags.title%",
+        "category": "%command.category%"
+      },
+      {
+        "command": "goStructTags.sortAndAlignTags",
+        "title": "%command.sortAndAlignTags.title%",
+        "category": "%command.category%"
+      },
+      {
+        "command": "goStructTags.sortTagsAll",
+        "title": "%command.sortTagsAll.title%",
+        "category": "%command.category%"
+      },
+      {
+        "command": "goStructTags.alignTagsAll",
+        "title": "%command.alignTagsAll.title%",
+        "category": "%command.category%"
+      },
+      {
+        "command": "goStructTags.sortAndAlignTagsAll",
+        "title": "%command.sortAndAlignTagsAll.title%",
+        "category": "%command.category%"
+      }
+    ],
+    "grammars": [
+      {
+        "scopeName": "tag.struct.go",
+        "path": "./syntaxes/go-struct-tags-manager.json",
+        "injectTo": [
+          "source.go"
+        ]
+      }
+    ]
+  },
+  "scripts": {
+    "clean": "node -e \"require('fs').rmSync('out', { recursive: true, force: true })\"",
+    "vscode:prepublish": "npm run compile",
+    "vscode:package": "vsce package --no-dependencies",
+    "vscode:publish": "vsce publish --no-dependencies",
+    "openvsx:publish": "npx ovsx publish --no-dependencies",
+    "compile": "npm run clean && tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile",
+    "test": "vscode-test",
+    "lint:ts": "eslint \"src/**/*.ts\" --max-warnings=0",
+    "lint:md": "markdownlint-cli2",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "lint": "npm run lint:ts && npm run lint:md && npm run format:check"
+  },
+  "overrides": {
+    "serialize-javascript": ">=7.0.5"
+  },
+  "devDependencies": {
+    "@types/node": "24.x",
+    "@types/vscode": "^1.105.1",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.7.0",
+    "@types/mocha": "^10.0.9",
+    "@vscode/test-cli": "^0.0.10",
+    "@vscode/test-electron": "^2.4.1",
+    "@vscode/vsce": "^3.2.1",
+    "eslint": "^9.13.0",
+    "markdownlint-cli2": "^0.22.0",
+    "prettier": "^3.4.2",
+    "typescript": "^5.6.3"
+  }
+}

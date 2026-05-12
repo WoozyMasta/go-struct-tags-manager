@@ -1,0 +1,22 @@
+{
+  "extension.displayName": "Go Struct Tags Manager",
+  "extension.description": "Syntaxhervorhebung, Sortierung und Ausrichtung von Go-Struct-Feld-Tags.",
+  "config.title": "Go Struct Tags Manager",
+  "config.autoSortOnSave.description": "Struct-Feld-Tags beim Speichern automatisch sortieren.",
+  "config.sortMode.description": "Legt fest, wie die kanonische Reihenfolge der Tag-Schlüssel beim Sortieren ermittelt wird.",
+  "config.sortMode.firstField": "Die Reihenfolge wird aus dem ersten Struct-Feld abgeleitet — dort vorhandene Schlüssel kommen zuerst, die übrigen folgen in der Reihenfolge ihres ersten Auftretens.",
+  "config.sortMode.alphabetical": "Alle Schlüssel werden alphabetisch sortiert (nach Anwendung von sortPriority).",
+  "config.sortPriority.description": "Tag-Schlüssel, die unabhängig vom sortMode immer zuerst stehen, in der angegebenen Reihenfolge. Beispiel: [\"json\", \"yaml\"].",
+  "config.autoAlignOnSave.description": "Struct-Feld-Tags beim Speichern automatisch ausrichten.",
+  "config.colors.key.description": "Farbe für Tag-Schlüssel (z. B. json, yaml) überschreiben. Leer lassen für Themenfarbe.",
+  "config.colors.value.description": "Farbe für Tag-Werte überschreiben. Leer lassen für Themenfarbe.",
+  "config.colors.option.description": "Farbe für Tag-Optionen (nach =) überschreiben. Leer lassen für Themenfarbe.",
+  "config.colors.separator.description": "Farbe für Tag-Trennzeichen (,) überschreiben. Leer lassen für Themenfarbe.",
+  "command.category": "Go Struct Tags Manager",
+  "command.sortTags.title": "Struct-Feld-Tags sortieren",
+  "command.alignTags.title": "Struct-Feld-Tags ausrichten",
+  "command.sortAndAlignTags.title": "Struct-Feld-Tags sortieren & ausrichten",
+  "command.sortTagsAll.title": "Struct-Feld-Tags in Datei sortieren",
+  "command.alignTagsAll.title": "Struct-Feld-Tags in Datei ausrichten",
+  "command.sortAndAlignTagsAll.title": "Struct-Feld-Tags in Datei sortieren & ausrichten"
+}

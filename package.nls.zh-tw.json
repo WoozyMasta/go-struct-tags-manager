@@ -1,0 +1,22 @@
+{
+  "extension.displayName": "Go Struct Tags Manager",
+  "extension.description": "Go 結構體欄位標籤的語法高亮、排序與對齊。",
+  "config.title": "Go Struct Tags Manager",
+  "config.autoSortOnSave.description": "儲存檔案時自動對結構體欄位標籤進行排序。",
+  "config.sortMode.description": "排序時決定標籤鍵規範順序的方式。",
+  "config.sortMode.firstField": "順序來源於第一個結構體欄位——該欄位中出現的鍵排在前面，其餘鍵按首次出現的順序依次排列。",
+  "config.sortMode.alphabetical": "所有鍵按字母順序排序（在套用 sortPriority 之後）。",
+  "config.sortPriority.description": "無論 sortMode 為何，始終按指定順序排在最前面的標籤鍵。範例：[\"json\", \"yaml\"]。",
+  "config.autoAlignOnSave.description": "儲存檔案時自動對結構體欄位標籤進行對齊。",
+  "config.colors.key.description": "標籤鍵（如 json、yaml）的顏色覆寫。留空則使用主題顏色。",
+  "config.colors.value.description": "標籤值的顏色覆寫。留空則使用主題顏色。",
+  "config.colors.option.description": "標籤選項（= 之後）的顏色覆寫。留空則使用主題顏色。",
+  "config.colors.separator.description": "標籤分隔符（,）的顏色覆寫。留空則使用主題顏色。",
+  "command.category": "Go Struct Tags Manager",
+  "command.sortTags.title": "排序結構體欄位標籤",
+  "command.alignTags.title": "對齊結構體欄位標籤",
+  "command.sortAndAlignTags.title": "排序並對齊結構體欄位標籤",
+  "command.sortTagsAll.title": "排序檔案中的結構體欄位標籤",
+  "command.alignTagsAll.title": "對齊檔案中的結構體欄位標籤",
+  "command.sortAndAlignTagsAll.title": "排序並對齊檔案中的結構體欄位標籤"
+}

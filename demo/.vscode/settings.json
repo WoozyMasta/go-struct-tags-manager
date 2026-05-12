@@ -1,0 +1,10 @@
+{
+  "goStructTags.sortMode": "alphabetical",
+  "goStructTags.sortPriority": ["json", "yaml"],
+  "goStructTags.autoSortOnSave": true,
+  "goStructTags.autoAlignOnSave": true,
+  "goStructTags.colors.key": "#4EC9B0",
+  "goStructTags.colors.value": "#CE9178",
+  "goStructTags.colors.option": "#B5CEA8",
+  "goStructTags.colors.separator": "#6A9955"
+}

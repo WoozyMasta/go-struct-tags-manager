@@ -1,0 +1,22 @@
+{
+  "extension.displayName": "Go Struct Tags Manager",
+  "extension.description": "Coloration syntaxique, tri et alignement des balises de champs de structures Go.",
+  "config.title": "Go Struct Tags Manager",
+  "config.autoSortOnSave.description": "Trier automatiquement les balises de champs de structure lors de l'enregistrement.",
+  "config.sortMode.description": "Comment déterminer l'ordre canonique des clés de balises lors du tri.",
+  "config.sortMode.firstField": "L'ordre est dérivé du premier champ de la structure — les clés qui y apparaissent viennent en premier, les autres suivent dans l'ordre de leur première apparition.",
+  "config.sortMode.alphabetical": "Toutes les clés sont triées alphabétiquement (après application de sortPriority).",
+  "config.sortPriority.description": "Clés de balises toujours placées en premier, dans l'ordre spécifié, quel que soit sortMode. Exemple : [\"json\", \"yaml\"].",
+  "config.autoAlignOnSave.description": "Aligner automatiquement les balises de champs de structure lors de l'enregistrement.",
+  "config.colors.key.description": "Couleur pour les clés de balises (ex. json, yaml). Laisser vide pour utiliser la couleur du thème.",
+  "config.colors.value.description": "Couleur pour les valeurs de balises. Laisser vide pour utiliser la couleur du thème.",
+  "config.colors.option.description": "Couleur pour les options de balises (après =). Laisser vide pour utiliser la couleur du thème.",
+  "config.colors.separator.description": "Couleur pour les séparateurs de balises (,). Laisser vide pour utiliser la couleur du thème.",
+  "command.category": "Go Struct Tags Manager",
+  "command.sortTags.title": "Trier les balises de champs de structure",
+  "command.alignTags.title": "Aligner les balises de champs de structure",
+  "command.sortAndAlignTags.title": "Trier et aligner les balises de champs de structure",
+  "command.sortTagsAll.title": "Trier les balises de champs de structure dans le fichier",
+  "command.alignTagsAll.title": "Aligner les balises de champs de structure dans le fichier",
+  "command.sortAndAlignTagsAll.title": "Trier et aligner les balises de champs de structure dans le fichier"
+}

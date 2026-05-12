@@ -1,0 +1,22 @@
+{
+  "extension.displayName": "Go Struct Tags Manager",
+  "extension.description": "Syntax highlighting, sorting, and alignment for Go struct field tags.",
+  "config.title": "Go Struct Tags Manager",
+  "config.autoSortOnSave.description": "Automatically sort struct field tags on file save.",
+  "config.sortMode.description": "How to determine the canonical tag key order when sorting.",
+  "config.sortMode.firstField": "Order is derived from the first struct field — keys that appear there come first, the rest follow in the order they are first encountered.",
+  "config.sortMode.alphabetical": "All keys are sorted alphabetically (after applying sortPriority).",
+  "config.sortPriority.description": "Tag keys that are always placed first, in the specified order, regardless of sortMode. Example: [\"json\", \"yaml\"].",
+  "config.autoAlignOnSave.description": "Automatically align struct field tags on file save.",
+  "config.colors.key.description": "Override color for tag keys (e.g. json, yaml). Leave empty to use theme color.",
+  "config.colors.value.description": "Override color for tag values. Leave empty to use theme color.",
+  "config.colors.option.description": "Override color for tag options (after =). Leave empty to use theme color.",
+  "config.colors.separator.description": "Override color for tag separators (,). Leave empty to use theme color.",
+  "command.category": "Go Struct Tags Manager",
+  "command.sortTags.title": "Sort Struct Field Tags",
+  "command.alignTags.title": "Align Struct Field Tags",
+  "command.sortAndAlignTags.title": "Sort & Align Struct Field Tags",
+  "command.sortTagsAll.title": "Sort Struct Field Tags in File",
+  "command.alignTagsAll.title": "Align Struct Field Tags in File",
+  "command.sortAndAlignTagsAll.title": "Sort & Align Struct Field Tags in File"
+}

@@ -1,0 +1,22 @@
+{
+  "extension.displayName": "Go Struct Tags Manager",
+  "extension.description": "Realce de sintaxe, ordenação e alinhamento de tags de campos de structs em Go.",
+  "config.title": "Go Struct Tags Manager",
+  "config.autoSortOnSave.description": "Ordenar automaticamente as tags de campos de struct ao salvar.",
+  "config.sortMode.description": "Como determinar a ordem canônica das chaves de tags ao ordenar.",
+  "config.sortMode.firstField": "A ordem é derivada do primeiro campo da struct — as chaves que aparecem lá vêm primeiro, o restante segue na ordem em que são encontradas pela primeira vez.",
+  "config.sortMode.alphabetical": "Todas as chaves são ordenadas alfabeticamente (após aplicar sortPriority).",
+  "config.sortPriority.description": "Chaves de tags que são sempre colocadas primeiro, na ordem especificada, independentemente do sortMode. Exemplo: [\"json\", \"yaml\"].",
+  "config.autoAlignOnSave.description": "Alinhar automaticamente as tags de campos de struct ao salvar.",
+  "config.colors.key.description": "Cor para chaves de tags (ex. json, yaml). Deixe vazio para usar a cor do tema.",
+  "config.colors.value.description": "Cor para valores de tags. Deixe vazio para usar a cor do tema.",
+  "config.colors.option.description": "Cor para opções de tags (após =). Deixe vazio para usar a cor do tema.",
+  "config.colors.separator.description": "Cor para separadores de tags (,). Deixe vazio para usar a cor do tema.",
+  "command.category": "Go Struct Tags Manager",
+  "command.sortTags.title": "Ordenar tags de campos de struct",
+  "command.alignTags.title": "Alinhar tags de campos de struct",
+  "command.sortAndAlignTags.title": "Ordenar e alinhar tags de campos de struct",
+  "command.sortTagsAll.title": "Ordenar tags de campos de struct no arquivo",
+  "command.alignTagsAll.title": "Alinhar tags de campos de struct no arquivo",
+  "command.sortAndAlignTagsAll.title": "Ordenar e alinhar tags de campos de struct no arquivo"
+}

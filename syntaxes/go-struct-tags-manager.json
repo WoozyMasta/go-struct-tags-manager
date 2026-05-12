@@ -1,0 +1,33 @@
+{
+  "injectionSelector": "L:string.quoted.raw.go",
+  "scopeName": "tag.struct.go",
+  "patterns": [
+    {
+      "comment": "key:\"value\" — entity.name.tag is colored in every theme (blue/teal), never red",
+      "match": "([a-zA-Z_][\\w-]*):(\"[^\"]*\")",
+      "captures": {
+        "1": {
+          "name": "entity.name.tag"
+        },
+        "2": {
+          "name": "string.quoted.double",
+          "patterns": [
+            {
+              "comment": "separator comma — comment scope is always muted/gray",
+              "match": ",",
+              "name": "comment"
+            },
+            {
+              "comment": "opt=val — key inherits string color (same as plain values), = is operator, value is constant",
+              "match": "([^,\"=]+)(=)([^,\"]+)",
+              "captures": {
+                "2": { "name": "keyword.operator" },
+                "3": { "name": "constant.numeric" }
+              }
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

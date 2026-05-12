@@ -1,0 +1,22 @@
+{
+  "extension.displayName": "Go Struct Tags Manager",
+  "extension.description": "Подсветка синтаксиса, сортировка и выравнивание тегов полей структур Go.",
+  "config.title": "Go Struct Tags Manager",
+  "config.autoSortOnSave.description": "Автоматически сортировать теги полей структур при сохранении файла.",
+  "config.sortMode.description": "Способ определения порядка ключей тегов при сортировке.",
+  "config.sortMode.firstField": "Порядок определяется по первому полю структуры — ключи, присутствующие в нём, идут первыми; остальные следуют в порядке первого появления.",
+  "config.sortMode.alphabetical": "Все ключи сортируются в алфавитном порядке (после применения sortPriority).",
+  "config.sortPriority.description": "Ключи тегов, которые всегда размещаются первыми в указанном порядке, независимо от sortMode. Пример: [\"json\", \"yaml\"].",
+  "config.autoAlignOnSave.description": "Автоматически выравнивать теги полей структур при сохранении файла.",
+  "config.colors.key.description": "Цвет ключей тегов (например, json, yaml). Оставьте пустым для использования цвета темы.",
+  "config.colors.value.description": "Цвет значений тегов. Оставьте пустым для использования цвета темы.",
+  "config.colors.option.description": "Цвет опций тегов (после =). Оставьте пустым для использования цвета темы.",
+  "config.colors.separator.description": "Цвет разделителей тегов (,). Оставьте пустым для использования цвета темы.",
+  "command.category": "Go Struct Tags Manager",
+  "command.sortTags.title": "Сортировать теги полей структуры",
+  "command.alignTags.title": "Выровнять теги полей структуры",
+  "command.sortAndAlignTags.title": "Сортировать и выровнять теги полей структуры",
+  "command.sortTagsAll.title": "Сортировать теги полей структур в файле",
+  "command.alignTagsAll.title": "Выровнять теги полей структур в файле",
+  "command.sortAndAlignTagsAll.title": "Сортировать и выровнять теги полей структур в файле"
+}
