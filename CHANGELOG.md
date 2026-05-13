@@ -13,12 +13,14 @@ and this project adheres to [Semantic Versioning][].
 ### Removed
 -->
 
-## Unreleased
+## [0.3.0][] - 2026-05-14
 
 ### Added
 
 * `goStructTags.alignMaxColumnGap` setting (default `16`):
   caps the blank space produced by empty column slots between two tag values.
+
+[0.3.0]: https://github.com/WoozyMasta/go-struct-tags-manager/compare/0.2.0...0.3.0
 
 ## [0.2.0][] - 2026-05-13
 
