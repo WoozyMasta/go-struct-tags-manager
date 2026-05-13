@@ -130,6 +130,9 @@
       }
     ]
   },
+  "config": {
+    "tag-version-prefix": ""
+  },
   "scripts": {
     "clean": "node -e \"require('fs').rmSync('out', { recursive: true, force: true })\"",
     "vscode:prepublish": "npm run compile",
