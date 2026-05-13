@@ -5,6 +5,18 @@ syntax highlighting, sorting, and alignment.
 
 ![Syntax highlighting in multiple themes](resources/preview.png)
 
+<!-- markdownlint-disable MD033 MD013 -->
+<p align="center">
+  <a href="https://marketplace.visualstudio.com/items?itemName=woozy-masta.go-struct-tags-manager">
+    VS Code Marketplace
+  </a>
+  &nbsp;|&nbsp;
+  <a href="https://open-vsx.org/extension/woozy-masta/go-struct-tags-manager">
+    Open VSX Registry
+  </a>
+</p>
+<!-- markdownlint-enable MD033 MD013 -->
+
 ## Features
 
 ### Syntax Highlighting
