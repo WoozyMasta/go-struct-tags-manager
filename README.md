@@ -131,13 +131,17 @@ All commands are available in the Command Palette
 * **`goStructTags.autoAlignOnSave`** `boolean` -
   automatically align tags on file save.  
   _Default: `false`._
-* **`goStructTags.sortMode`** `"first-field" | "alphabetical"` -
+* **`goStructTags.sortMode`** `"smart" | "first-field" | "alphabetical"` -
   how to determine canonical key order when sorting.  
-  _Default: `"first-field"`._
+  _Default: `"smart"`._
 * **`goStructTags.sortPriority`** `string[]` -
   tag keys that always come first, in the specified order,
   regardless of `sortMode`.  
   _Default: `[]`._
+* **`goStructTags.alignColumnThreshold`** `number` -
+  minimum fraction of fields in an alignment group (0–1) for a tag to receive
+  a dedicated column; tags below the threshold are appended without padding.  
+  _Default: `0.5`._
 * **`goStructTags.colors.key`** `string` -
   override color for tag keys (e.g. `json`, `yaml`).  
   _Leave empty to use theme color._
