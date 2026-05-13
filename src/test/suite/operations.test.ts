@@ -235,4 +235,66 @@ suite('alignGroup', () => {
     assert.strictEqual(result.get(1), 'json:"ab" yaml:"ab"')
     assert.strictEqual(result.get(2), 'json:"ab" yaml:"ab"')
   })
+
+  test('maxGap=0 preserves large empty-slot gap (disabled)', () => {
+    // mid (80%) comes before target (60%) in sorted order; field 5 has target but not mid
+    // 'mid:"long_padding_val"' = 22 chars → empty slot of 22 spaces
+    // maxGap=0: no limiting, gap preserved
+    const group = [
+      field(1, ['a', 'x'], ['mid', 'long_padding_val'], ['target', 'z']),
+      field(2, ['a', 'x'], ['mid', 'long_padding_val'], ['target', 'z']),
+      field(3, ['a', 'x'], ['mid', 'long_padding_val']),
+      field(4, ['a', 'x'], ['mid', 'long_padding_val']),
+      field(5, ['a', 'x'], ['target', 'z']),
+    ]
+    const result = alignGroup(group, 0, 0)
+    assert.strictEqual(result.get(5), 'a:"x" ' + ' '.repeat(22) + ' target:"z"')
+  })
+
+  test('maxGap drops oversized empty-slot gap', () => {
+    // Same group: empty slot of 22 > maxGap=16 → dropped, only join space remains
+    const group = [
+      field(1, ['a', 'x'], ['mid', 'long_padding_val'], ['target', 'z']),
+      field(2, ['a', 'x'], ['mid', 'long_padding_val'], ['target', 'z']),
+      field(3, ['a', 'x'], ['mid', 'long_padding_val']),
+      field(4, ['a', 'x'], ['mid', 'long_padding_val']),
+      field(5, ['a', 'x'], ['target', 'z']),
+    ]
+    const result = alignGroup(group, 0, 16)
+    assert.strictEqual(result.get(5), 'a:"x" target:"z"')
+  })
+
+  test('maxGap preserves empty-slot gap within limit', () => {
+    // 'mid:"short__"' = 13 chars ≤ maxGap=16 → preserved
+    const group = [
+      field(1, ['a', 'x'], ['mid', 'short__'], ['target', 'z']),
+      field(2, ['a', 'x'], ['mid', 'short__'], ['target', 'z']),
+      field(3, ['a', 'x'], ['mid', 'short__']),
+      field(4, ['a', 'x'], ['mid', 'short__']),
+      field(5, ['a', 'x'], ['target', 'z']),
+    ]
+    const result = alignGroup(group, 0, 16)
+    assert.strictEqual(result.get(5), 'a:"x" ' + ' '.repeat(13) + ' target:"z"')
+  })
+
+  test('maxGap drops multiple consecutive empty slots combined', () => {
+    // field 5 missing mid1 (80%) and mid2 (60%), both before target (60%) in sorted order
+    // combined pendingGap = 9 + 1 + 9 = 19 chars > maxGap=16 → dropped
+    const group = [
+      field(1, ['a', 'x'], ['mid1', 'vvv'], ['mid2', 'vvv'], ['target', 'z']),
+      field(2, ['a', 'x'], ['mid1', 'vvv'], ['mid2', 'vvv'], ['target', 'z']),
+      field(3, ['a', 'x'], ['mid1', 'vvv'], ['mid2', 'vvv']),
+      field(4, ['a', 'x'], ['mid1', 'vvv']),
+      field(5, ['a', 'x'], ['target', 'z']),
+    ]
+    const withLimit = alignGroup(group, 0, 16)
+    assert.strictEqual(withLimit.get(5), 'a:"x" target:"z"')
+
+    const withoutLimit = alignGroup(group, 0, 0)
+    // Combined 21-space gap preserved: join + 21 + join = 23 space gap
+    assert.strictEqual(
+      withoutLimit.get(5),
+      'a:"x" ' + ' '.repeat(21) + ' target:"z"',
+    )
+  })
 })

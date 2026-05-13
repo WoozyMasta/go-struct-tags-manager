@@ -103,6 +103,10 @@ type Address struct {
 Fields separated by blank lines or comments are treated
 as separate groups and aligned independently.
 
+Two settings control which tags get dedicated columns
+and how wide the gaps are allowed to grow -
+see [`alignColumnThreshold`](#settings) and [`alignMaxColumnGap`](#settings).
+
 ### Normalize Tags
 
 Both Sort and Align automatically normalize tags:
@@ -154,6 +158,12 @@ All commands are available in the Command Palette
   minimum fraction of fields in an alignment group (0–1) for a tag to receive
   a dedicated column; tags below the threshold are appended without padding.  
   _Default: `0.5`._
+* **`goStructTags.alignMaxColumnGap`** `number` -
+  maximum blank space (characters) that empty column slots
+  may produce between two actual tag values;
+  when the accumulated gap exceeds this limit the empty slots are dropped
+  and replaced with a single space. Set to `0` to disable.  
+  _Default: `24`._
 * **`goStructTags.colors.key`** `string` -
   override color for tag keys (e.g. `json`, `yaml`).  
   _Leave empty to use theme color._

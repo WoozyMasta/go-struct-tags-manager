@@ -218,6 +218,7 @@ function hasBlankLine(
 export function alignGroup(
   group: StructField[],
   columnThreshold = 0.5,
+  maxGap = 0,
 ): Map<number, string> {
   const order = buildCanonicalOrder(group)
   const n = group.length
@@ -287,12 +288,21 @@ export function alignGroup(
 
     if (lastCommonKey !== undefined) {
       const lastCommonIdx = commonKeys.indexOf(lastCommonKey)
+      let pendingGap = ''
 
       for (let i = 0; i < commonKeys.length; i++) {
         const key = commonKeys[i]
         const tag = field.tags.find((t) => t.key === key)
 
         if (tag) {
+          // Flush accumulated empty-slot gap before the next real tag
+          if (pendingGap) {
+            if (maxGap <= 0 || pendingGap.length <= maxGap) {
+              parts.push(pendingGap)
+            }
+            pendingGap = ''
+          }
+
           const rendered = `${tag.key}:"${tag.value}"`
           if (key === lastCommonKey) {
             parts.push(rendered) // last column for this field — no padding
@@ -300,8 +310,9 @@ export function alignGroup(
             parts.push(rendered.padEnd(maxLen.get(key) ?? rendered.length))
           }
         } else if (i < lastCommonIdx) {
-          // Empty slot: keep this column's width so subsequent columns stay aligned
-          parts.push(' '.repeat(maxLen.get(key) ?? 0))
+          // Accumulate empty-slot space; include the join ' ' between consecutive slots
+          const slotStr = ' '.repeat(maxLen.get(key) ?? 0)
+          pendingGap = pendingGap ? pendingGap + ' ' + slotStr : slotStr
         }
         // Keys beyond lastCommonIdx that the field doesn't have are simply skipped
       }

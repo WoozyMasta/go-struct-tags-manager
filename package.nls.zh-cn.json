@@ -8,6 +8,7 @@
   "config.sortMode.smart": "键按结构体中的出现频率排序，再按宽度排序。频繁出现的短标签排在前面，长或稀有的标签排在最后。",
   "config.sortMode.alphabetical": "所有键按字母顺序排序（在应用 sortPriority 之后）。",
   "config.alignColumnThreshold.description": "对齐组中标签获得专属列所需的最小字段占比（0–1）。低于阈值的标签追加在末尾，不添加填充。默认值：0.5。",
+  "config.alignMaxColumnGap.description": "两个实际标签值之间空列槽产生的最大空白字符数。若累积间距超过此限制，空槽将被丢弃并替换为单个空格。0 表示不限制。",
   "config.sortPriority.description": "无论 sortMode 如何，始终按指定顺序排在最前面的标签键。示例：[\"json\", \"yaml\"]。",
   "config.autoAlignOnSave.description": "保存文件时自动对结构体字段标签进行对齐。",
   "config.colors.key.description": "标签键（如 json、yaml）的颜色覆盖。留空则使用主题颜色。",

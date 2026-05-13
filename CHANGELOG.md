@@ -13,6 +13,13 @@ and this project adheres to [Semantic Versioning][].
 ### Removed
 -->
 
+## Unreleased
+
+### Added
+
+* `goStructTags.alignMaxColumnGap` setting (default `16`):
+  caps the blank space produced by empty column slots between two tag values.
+
 ## [0.2.0][] - 2026-05-13
 
 ### Added

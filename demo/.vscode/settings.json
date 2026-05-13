@@ -1,6 +1,8 @@
 {
   "goStructTags.sortMode": "smart",
   "goStructTags.sortPriority": ["json", "yaml"],
+  "goStructTags.alignColumnThreshold": 0.2,
+  "goStructTags.alignMaxColumnGap": 8,
   "goStructTags.autoSortOnSave": true,
   "goStructTags.autoAlignOnSave": true,
   "goStructTags.colors.key": "#4EC9B0",

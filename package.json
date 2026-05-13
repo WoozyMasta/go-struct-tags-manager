@@ -53,6 +53,12 @@
           "maximum": 1,
           "description": "%config.alignColumnThreshold.description%"
         },
+        "goStructTags.alignMaxColumnGap": {
+          "type": "number",
+          "default": 24,
+          "minimum": 0,
+          "description": "%config.alignMaxColumnGap.description%"
+        },
         "goStructTags.sortPriority": {
           "type": "array",
           "items": {

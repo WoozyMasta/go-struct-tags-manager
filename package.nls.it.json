@@ -8,6 +8,7 @@
   "config.sortMode.smart": "Le chiavi sono classificate per frequenza nel struct, poi per larghezza. I tag brevi e frequenti vengono prima; quelli lunghi o rari vanno alla fine.",
   "config.sortMode.alphabetical": "Tutte le chiavi sono ordinate alfabeticamente (dopo aver applicato sortPriority).",
   "config.alignColumnThreshold.description": "Frazione minima di campi in un gruppo di allineamento (0–1) perché un tag riceva una colonna dedicata. I tag sotto la soglia vengono aggiunti senza padding. Predefinito: 0.5.",
+  "config.alignMaxColumnGap.description": "Spazio massimo (caratteri) da slot di colonne vuote tra due valori di tag reali. Se il gap accumulato supera questo limite, gli slot vuoti vengono scartati e sostituiti da un singolo spazio. 0 disabilita il limite.",
   "config.sortPriority.description": "Chiavi dei tag che vengono sempre collocate per prime, nell'ordine specificato, indipendentemente da sortMode. Esempio: [\"json\", \"yaml\"].",
   "config.autoAlignOnSave.description": "Allinea automaticamente i tag dei campi di struct al salvataggio.",
   "config.colors.key.description": "Colore per le chiavi dei tag (es. json, yaml). Lasciare vuoto per usare il colore del tema.",

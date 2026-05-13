@@ -8,6 +8,7 @@
   "config.sortMode.smart": "鍵按結構體中的出現頻率排序，再按寬度排序。頻繁出現的短標籤排在前面，長或稀有的標籤排在最後。",
   "config.sortMode.alphabetical": "所有鍵按字母順序排序（在套用 sortPriority 之後）。",
   "config.alignColumnThreshold.description": "對齊組中標籤獲得專屬欄位所需的最小欄位占比（0–1）。低於閾值的標籤追加在末尾，不添加填充。預設值：0.5。",
+  "config.alignMaxColumnGap.description": "兩個實際標籤值之間空欄槽產生的最大空白字元數。若累積間距超過此限制，空欄槽將被丟棄並替換為單個空格。0 表示不限制。",
   "config.sortPriority.description": "無論 sortMode 為何，始終按指定順序排在最前面的標籤鍵。範例：[\"json\", \"yaml\"]。",
   "config.autoAlignOnSave.description": "儲存檔案時自動對結構體欄位標籤進行對齊。",
   "config.colors.key.description": "標籤鍵（如 json、yaml）的顏色覆寫。留空則使用主題顏色。",

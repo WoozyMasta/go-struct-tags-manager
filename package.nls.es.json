@@ -8,6 +8,7 @@
   "config.sortMode.smart": "Las claves se ordenan por frecuencia en el struct y luego por anchura. Las etiquetas cortas y frecuentes van primero; las largas o raras van al final.",
   "config.sortMode.alphabetical": "Todas las claves se ordenan alfabéticamente (después de aplicar sortPriority).",
   "config.alignColumnThreshold.description": "Fracción mínima de campos en un grupo de alineación (0–1) para que una etiqueta reciba una columna dedicada. Las etiquetas por debajo del umbral se añaden sin relleno. Predeterminado: 0.5.",
+  "config.alignMaxColumnGap.description": "Espacio máximo (caracteres) de columnas vacías entre dos valores de etiqueta reales. Si el hueco acumulado supera este límite, los slots vacíos se descartan y se sustituyen por un único espacio. 0 desactiva el límite.",
   "config.sortPriority.description": "Claves de etiquetas que siempre se colocan primero, en el orden especificado, independientemente de sortMode. Ejemplo: [\"json\", \"yaml\"].",
   "config.autoAlignOnSave.description": "Alinear automáticamente las etiquetas de campos de struct al guardar.",
   "config.colors.key.description": "Color para las claves de etiquetas (p. ej. json, yaml). Dejar vacío para usar el color del tema.",

@@ -8,6 +8,7 @@
   "config.sortMode.smart": "キーは構造体内の出現頻度、次に幅の順にランク付けされます。頻出の短いタグが先頭に来て、長いまたは稀なタグは末尾に配置されます。",
   "config.sortMode.alphabetical": "すべてのキーをアルファベット順に並び替えます（sortPriority 適用後）。",
   "config.alignColumnThreshold.description": "タグが専用列を取得するために必要な、位置揃えグループ内フィールドの最小割合（0〜1）。しきい値未満のタグはパディングなしで追加されます。デフォルト：0.5。",
+  "config.alignMaxColumnGap.description": "2つの実際のタグ値の間で空の列スロットが生成する最大スペース数（文字）。蓄積されたギャップがこの制限を超えると、空スロットは破棄され単一スペースに置き換えられます。0は制限なし。",
   "config.sortPriority.description": "sortMode に関係なく、常に最初に配置するタグキー（指定された順序）。例：[\"json\", \"yaml\"]。",
   "config.autoAlignOnSave.description": "ファイル保存時に構造体フィールドタグを自動的に位置揃えします。",
   "config.colors.key.description": "タグキー（json、yaml など）の色を上書きします。テーマの色を使用するには空にしてください。",

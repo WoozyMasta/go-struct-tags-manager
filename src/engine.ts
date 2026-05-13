@@ -29,6 +29,11 @@ export function readAlignColumnThreshold(): number {
   return cfg.get<number>('alignColumnThreshold') ?? 0.5
 }
 
+export function readAlignMaxColumnGap(): number {
+  const cfg = vscode.workspace.getConfiguration('goStructTags')
+  return cfg.get<number>('alignMaxColumnGap') ?? 24
+}
+
 export function findStructAtLine(
   structs: GoStruct[],
   line: number,
@@ -58,10 +63,18 @@ export function buildEdits(
   const lines = document.getText().split('\n')
   const opts = readSortOptions()
   const columnThreshold = readAlignColumnThreshold()
+  const maxColumnGap = readAlignMaxColumnGap()
   const edits: vscode.TextEdit[] = []
 
   for (const struct of structs) {
-    const byLine = projectTagsByLine(struct, mode, lines, opts, columnThreshold)
+    const byLine = projectTagsByLine(
+      struct,
+      mode,
+      lines,
+      opts,
+      columnThreshold,
+      maxColumnGap,
+    )
     for (const field of struct.fields) {
       const next = byLine.get(field.line)
       if (!next) {
@@ -89,6 +102,7 @@ function projectTagsByLine(
   lines: string[],
   opts: SortOptions,
   columnThreshold: number,
+  maxColumnGap: number,
 ): Map<number, string> {
   const result = new Map<number, string>()
   if (struct.fields.length === 0) {
@@ -110,7 +124,11 @@ function projectTagsByLine(
   const projectedStruct: GoStruct = { ...struct, fields: projectedFields }
   const alignedByLine = new Map<number, string>()
   for (const group of findAlignmentGroups(projectedStruct, lines)) {
-    for (const [line, raw] of alignGroup(group, columnThreshold)) {
+    for (const [line, raw] of alignGroup(
+      group,
+      columnThreshold,
+      maxColumnGap,
+    )) {
       alignedByLine.set(line, raw)
     }
   }

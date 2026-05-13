@@ -8,6 +8,7 @@
   "config.sortMode.smart": "Schlüssel werden nach Häufigkeit im Struct, dann nach Breite geordnet. Häufige kurze Tags kommen zuerst, lange oder seltene zuletzt.",
   "config.sortMode.alphabetical": "Alle Schlüssel werden alphabetisch sortiert (nach Anwendung von sortPriority).",
   "config.alignColumnThreshold.description": "Mindestanteil der Felder in einer Ausrichtungsgruppe (0–1), damit ein Tag eine eigene Spalte erhält. Tags unterhalb des Schwellenwerts werden ohne Einrückung angehängt. Standard: 0.5.",
+  "config.alignMaxColumnGap.description": "Maximaler Leerraum (Zeichen) durch leere Spalten zwischen zwei tatsächlichen Tag-Werten. Überschreitet der akkumulierte Abstand diesen Wert, werden die leeren Slots verworfen und durch ein einzelnes Leerzeichen ersetzt. 0 deaktiviert das Limit.",
   "config.sortPriority.description": "Tag-Schlüssel, die unabhängig vom sortMode immer zuerst stehen, in der angegebenen Reihenfolge. Beispiel: [\"json\", \"yaml\"].",
   "config.autoAlignOnSave.description": "Struct-Feld-Tags beim Speichern automatisch ausrichten.",
   "config.colors.key.description": "Farbe für Tag-Schlüssel (z. B. json, yaml) überschreiben. Leer lassen für Themenfarbe.",

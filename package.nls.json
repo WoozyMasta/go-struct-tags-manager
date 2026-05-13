@@ -8,6 +8,7 @@
   "config.sortMode.firstField": "Order is derived from the first struct field — keys that appear there come first, the rest follow in the order they are first encountered.",
   "config.sortMode.alphabetical": "All keys are sorted alphabetically (after applying sortPriority).",
   "config.alignColumnThreshold.description": "Minimum fraction of fields in an alignment group (0–1) for a tag to get a dedicated column. Tags below the threshold are appended without padding. Default: 0.5.",
+  "config.alignMaxColumnGap.description": "Maximum blank-column gap (spaces) allowed between two tag values. Empty column slots that exceed this limit are dropped, leaving a single space. 0 disables the limit.",
   "config.sortPriority.description": "Tag keys that are always placed first, in the specified order, regardless of sortMode. Example: [\"json\", \"yaml\"].",
   "config.autoAlignOnSave.description": "Automatically align struct field tags on file save.",
   "config.colors.key.description": "Override color for tag keys (e.g. json, yaml). Leave empty to use theme color.",
