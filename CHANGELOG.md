@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning][].
 ### Removed
 -->
 
+## [0.2.0][] - 2026-05-13
+
+### Added
+
+* Smart sort mode ranks tag keys by frequency then by average rendered width.
+* `goStructTags.alignColumnThreshold` setting (default `0.5`).
+
+### Changed
+
+* `goStructTags.sortMode` now `smart` by default.
+
+### Fixed
+
+* Syntax highlighting: `=` characters inside plain tag values
+  were incorrectly highlighted as option separators.
+
+[0.2.0]: https://github.com/WoozyMasta/go-struct-tags-manager/compare/0.1.0...0.2.0
+
 ## [0.1.0][] - 2026-05-12
 
 ### Added

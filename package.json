@@ -34,15 +34,24 @@
         "goStructTags.sortMode": {
           "type": "string",
           "enum": [
+            "smart",
             "first-field",
             "alphabetical"
           ],
           "enumDescriptions": [
+            "%config.sortMode.smart%",
             "%config.sortMode.firstField%",
             "%config.sortMode.alphabetical%"
           ],
-          "default": "first-field",
+          "default": "smart",
           "description": "%config.sortMode.description%"
+        },
+        "goStructTags.alignColumnThreshold": {
+          "type": "number",
+          "default": 0.5,
+          "minimum": 0,
+          "maximum": 1,
+          "description": "%config.alignColumnThreshold.description%"
         },
         "goStructTags.sortPriority": {
           "type": "array",

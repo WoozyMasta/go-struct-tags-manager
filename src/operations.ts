@@ -2,8 +2,14 @@ import { GoStruct, StructField, TagPair } from './parser'
 
 /** Configuration for the sort operation, read from workspace settings on each invocation. */
 export interface SortOptions {
-  /** Determines how the canonical key order is derived when no priority applies. */
-  mode: 'first-field' | 'alphabetical'
+  /**
+   * Determines how the canonical key order is derived when no priority applies.
+   * - `smart` — sorts by tag frequency (desc) then average rendered width (asc),
+   *   so common short tags come first and long/rare tags fall to the end.
+   * - `first-field` — order is derived from the first struct field.
+   * - `alphabetical` — all keys sorted A–Z.
+   */
+  mode: 'smart' | 'first-field' | 'alphabetical'
   /** Tag keys that always sort first, in the order listed. Keys absent from the struct are ignored. */
   priority: string[]
 }
@@ -36,7 +42,7 @@ export function buildCanonicalOrder(fields: StructField[]): string[] {
  * Priority keys that are not present in the struct are silently ignored.
  *
  * @param fields - All tagged fields of a struct.
- * @param opts - Sort mode (`first-field` or `alphabetical`) and explicit priority keys.
+ * @param opts - Sort mode and explicit priority keys.
  * @returns Ordered list of tag keys: priority keys first, then the rest per the chosen mode.
  */
 export function buildSortOrder(
@@ -56,11 +62,53 @@ export function buildSortOrder(
   let remaining: string[]
   if (opts.mode === 'alphabetical') {
     remaining = [...allKeys].filter((k) => !prioritySet.has(k)).sort()
+  } else if (opts.mode === 'smart') {
+    remaining = buildSmartOrder(fields).filter((k) => !prioritySet.has(k))
   } else {
     remaining = buildCanonicalOrder(fields).filter((k) => !prioritySet.has(k))
   }
 
   return [...priorityKeys, ...remaining]
+}
+
+/**
+ * Derives a tag key order optimised for readability of mixed-tag structs.
+ * Keys are ranked by frequency across all fields (descending) and then by
+ * average rendered width (ascending), so common short tags come first and
+ * long or rare tags — such as `description` — fall naturally to the end.
+ *
+ * @param fields - All tagged fields of the struct.
+ * @returns Keys sorted from most-frequent/shortest to least-frequent/longest.
+ */
+function buildSmartOrder(fields: StructField[]): string[] {
+  if (fields.length === 0) {
+    return []
+  }
+
+  const count = new Map<string, number>()
+  const totalWidth = new Map<string, number>()
+
+  for (const field of fields) {
+    for (const tag of field.tags) {
+      count.set(tag.key, (count.get(tag.key) ?? 0) + 1)
+      totalWidth.set(
+        tag.key,
+        (totalWidth.get(tag.key) ?? 0) + `${tag.key}:"${tag.value}"`.length,
+      )
+    }
+  }
+
+  const n = fields.length
+  return [...count.keys()].sort((a, b) => {
+    const fa = count.get(a)! / n
+    const fb = count.get(b)! / n
+    if (fa !== fb) {
+      return fb - fa
+    }
+    const avgA = totalWidth.get(a)! / count.get(a)!
+    const avgB = totalWidth.get(b)! / count.get(b)!
+    return avgA - avgB
+  })
 }
 
 /**
@@ -153,19 +201,48 @@ function hasBlankLine(
 }
 
 /**
- * Computes padded tag strings for a group of consecutive fields so that each tag column aligns vertically.
- * The last tag on each line is never padded.
+ * Computes padded tag strings for a group of consecutive fields so that columns align vertically.
+ *
+ * Tags are split into two classes based on how often they appear across the group:
+ * - **Common** (frequency ≥ `columnThreshold`): get a dedicated column. Missing cells are
+ *   filled with blank space so subsequent common columns stay aligned. The last common column
+ *   a field has is never padded.
+ * - **Rare** (frequency < `columnThreshold`): appended after the last common column without
+ *   column alignment, avoiding large gaps caused by tags that only a few fields carry.
  *
  * @param group - Two or more consecutive struct fields to align.
+ * @param columnThreshold - Fraction of fields [0–1] that must have a tag for it to get a
+ *   dedicated column. Defaults to `0.5`.
  * @returns A map of line number to the new raw tag content (without surrounding backticks).
  */
-export function alignGroup(group: StructField[]): Map<number, string> {
-  // Build ordered list of all keys in canonical order for this group
+export function alignGroup(
+  group: StructField[],
+  columnThreshold = 0.5,
+): Map<number, string> {
   const order = buildCanonicalOrder(group)
+  const n = group.length
 
-  // For each key position, find the max rendered length of key:"value"
+  // Classify each key by frequency within the group
+  const freq = new Map<string, number>()
+  for (const key of order) {
+    let count = 0
+    for (const field of group) {
+      if (field.tags.some((t) => t.key === key)) {
+        count++
+      }
+    }
+    freq.set(key, count / n)
+  }
+
+  const rareKeySet = new Set(
+    order.filter((k) => (freq.get(k) ?? 0) <= columnThreshold),
+  )
+  const orderSet = new Set(order)
+
+  // Max rendered width for each common key
   const maxLen = new Map<string, number>()
   for (const key of order) {
+    if (rareKeySet.has(key)) continue
     let max = 0
     for (const field of group) {
       const tag = field.tags.find((t) => t.key === key)
@@ -179,35 +256,63 @@ export function alignGroup(group: StructField[]): Map<number, string> {
     maxLen.set(key, max)
   }
 
+  // Within the group, reorder common columns by (frequency DESC, maxLen ASC) so that
+  // narrow columns always precede wide ones at equal frequency — preventing a wide tag
+  // like `description` from being padded just to align a narrow trailing tag like `short`.
+  const commonKeys = order
+    .filter((k) => !rareKeySet.has(k))
+    .sort((a, b) => {
+      const fd = (freq.get(b) ?? 0) - (freq.get(a) ?? 0)
+      if (fd !== 0) return fd
+      return (maxLen.get(a) ?? 0) - (maxLen.get(b) ?? 0)
+    })
+
   const result = new Map<number, string>()
 
   for (const field of group) {
     const parts: string[] = []
 
-    for (let i = 0; i < order.length; i++) {
-      const key = order[i]
-      const tag = field.tags.find((t) => t.key === key)
-
-      if (!tag) {
-        continue
-      }
-
-      const rendered = `${tag.key}:"${tag.value}"`
-      const isLast =
-        i === order.length - 1 ||
-        !order.slice(i + 1).some((k) => field.tags.some((t) => t.key === k))
-
-      if (isLast) {
-        parts.push(rendered)
-      } else {
-        const max = maxLen.get(key) ?? rendered.length
-        parts.push(rendered.padEnd(max))
+    // Determine the last common key this field has, to know where padding stops
+    let lastCommonKey: string | undefined
+    for (let i = commonKeys.length - 1; i >= 0; i--) {
+      if (field.tags.some((t) => t.key === commonKeys[i])) {
+        lastCommonKey = commonKeys[i]
+        break
       }
     }
 
-    // Also append any tags not in canonical order (unknown keys)
+    if (lastCommonKey !== undefined) {
+      const lastCommonIdx = commonKeys.indexOf(lastCommonKey)
+
+      for (let i = 0; i < commonKeys.length; i++) {
+        const key = commonKeys[i]
+        const tag = field.tags.find((t) => t.key === key)
+
+        if (tag) {
+          const rendered = `${tag.key}:"${tag.value}"`
+          if (key === lastCommonKey) {
+            parts.push(rendered) // last column for this field — no padding
+          } else {
+            parts.push(rendered.padEnd(maxLen.get(key) ?? rendered.length))
+          }
+        } else if (i < lastCommonIdx) {
+          // Empty slot: keep this column's width so subsequent columns stay aligned
+          parts.push(' '.repeat(maxLen.get(key) ?? 0))
+        }
+        // Keys beyond lastCommonIdx that the field doesn't have are simply skipped
+      }
+    }
+
+    // Append rare keys in sorted order, no column alignment
     for (const tag of field.tags) {
-      if (!order.includes(tag.key)) {
+      if (rareKeySet.has(tag.key)) {
+        parts.push(`${tag.key}:"${tag.value}"`)
+      }
+    }
+
+    // Append unknown keys (not seen anywhere in the group)
+    for (const tag of field.tags) {
+      if (!orderSet.has(tag.key)) {
         parts.push(`${tag.key}:"${tag.value}"`)
       }
     }

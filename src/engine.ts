@@ -18,9 +18,15 @@ export interface StructSpan {
 export function readSortOptions(): SortOptions {
   const cfg = vscode.workspace.getConfiguration('goStructTags')
   return {
-    mode: cfg.get<'first-field' | 'alphabetical'>('sortMode') ?? 'first-field',
+    mode:
+      cfg.get<'smart' | 'first-field' | 'alphabetical'>('sortMode') ?? 'smart',
     priority: cfg.get<string[]>('sortPriority') ?? [],
   }
+}
+
+export function readAlignColumnThreshold(): number {
+  const cfg = vscode.workspace.getConfiguration('goStructTags')
+  return cfg.get<number>('alignColumnThreshold') ?? 0.5
 }
 
 export function findStructAtLine(
@@ -51,10 +57,11 @@ export function buildEdits(
 
   const lines = document.getText().split('\n')
   const opts = readSortOptions()
+  const columnThreshold = readAlignColumnThreshold()
   const edits: vscode.TextEdit[] = []
 
   for (const struct of structs) {
-    const byLine = projectTagsByLine(struct, mode, lines, opts)
+    const byLine = projectTagsByLine(struct, mode, lines, opts, columnThreshold)
     for (const field of struct.fields) {
       const next = byLine.get(field.line)
       if (!next) {
@@ -81,6 +88,7 @@ function projectTagsByLine(
   mode: TransformMode,
   lines: string[],
   opts: SortOptions,
+  columnThreshold: number,
 ): Map<number, string> {
   const result = new Map<number, string>()
   if (struct.fields.length === 0) {
@@ -102,7 +110,7 @@ function projectTagsByLine(
   const projectedStruct: GoStruct = { ...struct, fields: projectedFields }
   const alignedByLine = new Map<number, string>()
   for (const group of findAlignmentGroups(projectedStruct, lines)) {
-    for (const [line, raw] of alignGroup(group)) {
+    for (const [line, raw] of alignGroup(group, columnThreshold)) {
       alignedByLine.set(line, raw)
     }
   }

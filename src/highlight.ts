@@ -17,7 +17,7 @@ interface TagRanges {
 
 const reMatchLine = /(`[^`]+`)/
 const reTag = /(\w[\w-]*):"([^"]*)"/g
-const reOption = /[^,=]+(=)([^,]+)/g
+const reOption = /\w[\w-]*(=)([^,]+)/g
 
 export function addHighlight(context: vscode.ExtensionContext): void {
   let { types, update } = buildDecorator(context)

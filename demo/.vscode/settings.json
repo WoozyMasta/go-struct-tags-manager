@@ -1,5 +1,5 @@
 {
-  "goStructTags.sortMode": "alphabetical",
+  "goStructTags.sortMode": "smart",
   "goStructTags.sortPriority": ["json", "yaml"],
   "goStructTags.autoSortOnSave": true,
   "goStructTags.autoAlignOnSave": true,
