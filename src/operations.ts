@@ -242,7 +242,9 @@ export function alignGroup(
   // Max rendered width for each common key
   const maxLen = new Map<string, number>()
   for (const key of order) {
-    if (rareKeySet.has(key)) continue
+    if (rareKeySet.has(key)) {
+      continue
+    }
     let max = 0
     for (const field of group) {
       const tag = field.tags.find((t) => t.key === key)
@@ -263,7 +265,9 @@ export function alignGroup(
     .filter((k) => !rareKeySet.has(k))
     .sort((a, b) => {
       const fd = (freq.get(b) ?? 0) - (freq.get(a) ?? 0)
-      if (fd !== 0) return fd
+      if (fd !== 0) {
+        return fd
+      }
       return (maxLen.get(a) ?? 0) - (maxLen.get(b) ?? 0)
     })
 
