@@ -34,7 +34,7 @@ export interface GoStruct {
 
 const reStructStart = /^\s*type\s+(\w+)\s+struct\s*\{/
 const reTaggedField = /^(\s*\w[\w\d]*\s+\S[^`]*?)\s*(`[^`]+`)/
-const reTag = /(\w[\w-]*):"([^"]*)"/g
+const reTag = /(\w[\w-]*):"((?:[^"\\]|\\.)*)"/g
 
 /**
  * Parses all top-level struct definitions from a Go source document.
@@ -105,7 +105,7 @@ function parseFieldLine(line: string, lineIndex: number): StructField | null {
 
   const tagLiteral = m[2] // includes backticks
   const tagStart = line.indexOf('`')
-  const tagEnd = line.lastIndexOf('`') + 1
+  const tagEnd = tagStart + tagLiteral.length
   const raw = tagLiteral.slice(1, -1) // strip backticks
 
   const tags = parseTags(raw)

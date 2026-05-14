@@ -41,6 +41,23 @@ suite('parseTags', () => {
   test('empty value', () => {
     assert.deepStrictEqual(parseTags('json:""'), [{ key: 'json', value: '' }])
   })
+
+  test('value with escaped quotes', () => {
+    assert.deepStrictEqual(
+      parseTags('description:"address i.e \\"0.0.0.0:8080\\" (default)"'),
+      [{ key: 'description', value: 'address i.e \\"0.0.0.0:8080\\" (default)' }],
+    )
+  })
+
+  test('escaped quotes do not truncate subsequent tags', () => {
+    const result = parseTags(
+      'description:"i.e \\"0.0.0.0:8080\\"" env:"ADDR"',
+    )
+    assert.strictEqual(result.length, 2)
+    assert.strictEqual(result[0].key, 'description')
+    assert.strictEqual(result[1].key, 'env')
+    assert.strictEqual(result[1].value, 'ADDR')
+  })
 })
 
 suite('reconstructTag', () => {
@@ -128,5 +145,26 @@ suite('parseStructs', () => {
     const structs = parseStructs(mockDoc(src))
     assert.strictEqual(structs[0].fields[0].line, 1)
     assert.strictEqual(structs[0].fields[1].line, 2)
+  })
+
+  test('tagEnd stops at closing backtick, not a backtick in a comment', () => {
+    // If tagEnd used lastIndexOf('`'), it would extend into the comment backtick
+    const line = '\tA string `json:"a"` // use `json:"x"` as reference'
+    const src = ['type T struct {', line, '}'].join('\n')
+    const structs = parseStructs(mockDoc(src))
+    const field = structs[0].fields[0]
+    // tag is `json:"a"` — 10 chars; tagEnd must point right after its closing backtick
+    const expectedEnd = line.indexOf('`') + '`json:"a"`'.length
+    assert.strictEqual(field.tagEnd, expectedEnd)
+  })
+
+  test('tagStart and tagEnd are correct for field with escaped-quote value', () => {
+    const tag = '`description:"i.e \\"0.0.0.0:8080\\""`'
+    const line = '\tA ListenEndpoint ' + tag
+    const src = ['type T struct {', line, '}'].join('\n')
+    const structs = parseStructs(mockDoc(src))
+    const field = structs[0].fields[0]
+    assert.strictEqual(field.tagStart, line.indexOf('`'))
+    assert.strictEqual(field.tagEnd, line.indexOf('`') + tag.length)
   })
 })
