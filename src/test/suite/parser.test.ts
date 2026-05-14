@@ -45,14 +45,17 @@ suite('parseTags', () => {
   test('value with escaped quotes', () => {
     assert.deepStrictEqual(
       parseTags('description:"address i.e \\"0.0.0.0:8080\\" (default)"'),
-      [{ key: 'description', value: 'address i.e \\"0.0.0.0:8080\\" (default)' }],
+      [
+        {
+          key: 'description',
+          value: 'address i.e \\"0.0.0.0:8080\\" (default)',
+        },
+      ],
     )
   })
 
   test('escaped quotes do not truncate subsequent tags', () => {
-    const result = parseTags(
-      'description:"i.e \\"0.0.0.0:8080\\"" env:"ADDR"',
-    )
+    const result = parseTags('description:"i.e \\"0.0.0.0:8080\\"" env:"ADDR"')
     assert.strictEqual(result.length, 2)
     assert.strictEqual(result[0].key, 'description')
     assert.strictEqual(result[1].key, 'env')
