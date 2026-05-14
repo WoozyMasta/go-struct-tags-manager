@@ -3,7 +3,7 @@
   "author": "WoozyMasta",
   "displayName": "%extension.displayName%",
   "description": "%extension.description%",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "publisher": "woozy-masta",
   "icon": "resources/icon.png",
   "license": "MIT",
