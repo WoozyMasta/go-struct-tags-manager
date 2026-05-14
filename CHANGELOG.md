@@ -13,6 +13,17 @@ and this project adheres to [Semantic Versioning][].
 ### Removed
 -->
 
+## [0.3.1][] - 2026-05-15
+
+### Fixed
+
+* Tag values containing escaped quotes (`\"`) were silently truncated at the
+  first backslash — subsequent tags on the same field were lost entirely.
+* Edit range could extend into a backtick inside a trailing inline comment,
+  overwriting text outside the struct tag.
+
+[0.3.1]: https://github.com/WoozyMasta/go-struct-tags-manager/compare/0.3.0...0.3.1
+
 ## [0.3.0][] - 2026-05-14
 
 ### Added
