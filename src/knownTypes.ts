@@ -31,15 +31,27 @@ export const knownTypes: Record<string, KnownTypeSpec> = {
     containsPointer: true,
   },
   // int64 alias — no pointer
-  'time.Duration': { size: () => 8, alignment: () => 8, containsPointer: false },
+  'time.Duration': {
+    size: () => 8,
+    alignment: () => 8,
+    containsPointer: false,
+  },
 
   //? net
 
   // []byte slice header: ptr+len+cap = 3p
   'net.IP': { size: (p) => p * 3, alignment: (p) => p, containsPointer: true },
-  'net.HardwareAddr': { size: (p) => p * 3, alignment: (p) => p, containsPointer: true },
+  'net.HardwareAddr': {
+    size: (p) => p * 3,
+    alignment: (p) => p,
+    containsPointer: true,
+  },
   // IP(3p) + Mask IPMask(3p) = 6p
-  'net.IPNet': { size: (p) => p * 6, alignment: (p) => p, containsPointer: true },
+  'net.IPNet': {
+    size: (p) => p * 6,
+    alignment: (p) => p,
+    containsPointer: true,
+  },
 
   //? net/netip
 
@@ -47,7 +59,11 @@ export const knownTypes: Record<string, KnownTypeSpec> = {
   // On 386: 16+4 = 20 → padded to 24 (align 8). On 64-bit: 16+8 = 24.
   'netip.Addr': { size: () => 24, alignment: () => 8, containsPointer: true },
   // Addr(24) + port uint16(2) → padded to 32 (align 8)
-  'netip.AddrPort': { size: () => 32, alignment: () => 8, containsPointer: true },
+  'netip.AddrPort': {
+    size: () => 32,
+    alignment: () => 8,
+    containsPointer: true,
+  },
   // Addr(24) + bits int8(1) → padded to 32 (align 8)
   'netip.Prefix': { size: () => 32, alignment: () => 8, containsPointer: true },
 
@@ -56,27 +72,55 @@ export const knownTypes: Record<string, KnownTypeSpec> = {
   // state int32(4) + sema uint32(4)
   'sync.Mutex': { size: () => 8, alignment: () => 4, containsPointer: false },
   // Mutex(8) + writerSem(4) + readerSem(4) + readerCount(4) + readerWait(4)
-  'sync.RWMutex': { size: () => 24, alignment: () => 4, containsPointer: false },
+  'sync.RWMutex': {
+    size: () => 24,
+    alignment: () => 4,
+    containsPointer: false,
+  },
   // done atomic.Uint32(4) + m Mutex(8), align 4
   'sync.Once': { size: () => 12, alignment: () => 4, containsPointer: false },
   // state atomic.Uint64(8) + sema uint32(4) → padded to 16 (align 8)
-  'sync.WaitGroup': { size: () => 16, alignment: () => 8, containsPointer: false },
+  'sync.WaitGroup': {
+    size: () => 16,
+    alignment: () => 8,
+    containsPointer: false,
+  },
   // mu Mutex(8) + read atomic.Pointer(p) + dirty map(p) + misses int(p)
-  'sync.Map': { size: (p) => 8 + p * 3, alignment: (p) => p, containsPointer: true },
+  'sync.Map': {
+    size: (p) => 8 + p * 3,
+    alignment: (p) => p,
+    containsPointer: true,
+  },
 
   //? sync/atomic
 
   // v any = 2p
-  'atomic.Value': { size: (p) => p * 2, alignment: (p) => p, containsPointer: true },
+  'atomic.Value': {
+    size: (p) => p * 2,
+    alignment: (p) => p,
+    containsPointer: true,
+  },
   // v uint32 (4 bytes, no pointer)
   'atomic.Bool': { size: () => 4, alignment: () => 4, containsPointer: false },
   'atomic.Int32': { size: () => 4, alignment: () => 4, containsPointer: false },
-  'atomic.Uint32': { size: () => 4, alignment: () => 4, containsPointer: false },
+  'atomic.Uint32': {
+    size: () => 4,
+    alignment: () => 4,
+    containsPointer: false,
+  },
   // v int64/uint64 — Go guarantees 8-byte alignment even on 386
   'atomic.Int64': { size: () => 8, alignment: () => 8, containsPointer: false },
-  'atomic.Uint64': { size: () => 8, alignment: () => 8, containsPointer: false },
+  'atomic.Uint64': {
+    size: () => 8,
+    alignment: () => 8,
+    containsPointer: false,
+  },
   // v uintptr — pointer-sized but NOT a GC-traced pointer
-  'atomic.Uintptr': { size: (p) => p, alignment: (p) => p, containsPointer: false },
+  'atomic.Uintptr': {
+    size: (p) => p,
+    alignment: (p) => p,
+    containsPointer: false,
+  },
 
   //? math/big
 
@@ -98,15 +142,35 @@ export const knownTypes: Record<string, KnownTypeSpec> = {
   //? database/sql
 
   // string(2p) + bool(1) → padded to 3p
-  'sql.NullString': { size: (p) => p * 3, alignment: (p) => p, containsPointer: true },
+  'sql.NullString': {
+    size: (p) => p * 3,
+    alignment: (p) => p,
+    containsPointer: true,
+  },
   // int64(8) + bool(1) → padded to 16
-  'sql.NullInt64': { size: () => 16, alignment: () => 8, containsPointer: false },
+  'sql.NullInt64': {
+    size: () => 16,
+    alignment: () => 8,
+    containsPointer: false,
+  },
   // float64(8) + bool(1) → padded to 16
-  'sql.NullFloat64': { size: () => 16, alignment: () => 8, containsPointer: false },
+  'sql.NullFloat64': {
+    size: () => 16,
+    alignment: () => 8,
+    containsPointer: false,
+  },
   // int32(4) + bool(1) → padded to 8
-  'sql.NullInt32': { size: () => 8, alignment: () => 4, containsPointer: false },
+  'sql.NullInt32': {
+    size: () => 8,
+    alignment: () => 4,
+    containsPointer: false,
+  },
   // int16(2) + bool(1) → padded to 4
-  'sql.NullInt16': { size: () => 4, alignment: () => 2, containsPointer: false },
+  'sql.NullInt16': {
+    size: () => 4,
+    alignment: () => 2,
+    containsPointer: false,
+  },
   // bool(1) + bool(1) = 2
   'sql.NullBool': { size: () => 2, alignment: () => 1, containsPointer: false },
   'sql.NullByte': { size: () => 2, alignment: () => 1, containsPointer: false },
@@ -127,7 +191,11 @@ export const knownTypes: Record<string, KnownTypeSpec> = {
     containsPointer: true,
   },
   // addr *Builder(p) + buf []byte(3p)
-  'strings.Builder': { size: (p) => p * 4, alignment: (p) => p, containsPointer: true },
+  'strings.Builder': {
+    size: (p) => p * 4,
+    alignment: (p) => p,
+    containsPointer: true,
+  },
   // s string(2p) + i int64(8, align 8) + prevRune int(p)
   // On 64-bit: 16+8+8 = 32, align 8. On 386: 8+8+4 = 20 → padded to 24 (align 8).
   'strings.Reader': {

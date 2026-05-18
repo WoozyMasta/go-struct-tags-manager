@@ -74,7 +74,7 @@ function getTypeInfo(
     case 'any':
     case 'error':
       return { size: ptrSize * 2, alignment: ptrSize }
-    default:
+    default: {
       if (typeName.startsWith('*') || typeName === 'unsafe.Pointer') {
         return { size: ptrSize, alignment: ptrSize }
       }
@@ -100,10 +100,14 @@ function getTypeInfo(
       // Curated external types (time.Time, sync.Mutex, sql.NullString, etc.)
       const known = knownTypes[typeName]
       if (known) {
-        return { size: known.size(ptrSize), alignment: known.alignment(ptrSize) }
+        return {
+          size: known.size(ptrSize),
+          alignment: known.alignment(ptrSize),
+        }
       }
       // Unknown types (custom structs, qualified types) → pointer size
       return { size: ptrSize, alignment: ptrSize }
+    }
   }
 }
 
@@ -219,7 +223,11 @@ export function optimalOrder(
   arch: Architecture = 'amd64',
 ): OptimizationResult {
   if (fields.length < 2) {
-    return { orderedNames: fields.map((f) => f.name), bytesSaved: 0, reordered: false }
+    return {
+      orderedNames: fields.map((f) => f.name),
+      bytesSaved: 0,
+      reordered: false,
+    }
   }
 
   const ptrSize = pointerSize(arch)
