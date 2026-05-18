@@ -21,5 +21,9 @@
   "command.sortAndAlignTags.title": "排序並對齊結構體欄位標籤",
   "command.sortTagsAll.title": "排序檔案中的結構體欄位標籤",
   "command.alignTagsAll.title": "對齊檔案中的結構體欄位標籤",
-  "command.sortAndAlignTagsAll.title": "排序並對齊檔案中的結構體欄位標籤"
+  "command.sortAndAlignTagsAll.title": "排序並對齊檔案中的結構體欄位標籤",
+  "config.memory.architecture.description": "Go 記憶體佈局計算的目標架構。影響指標大小（amd64/arm64 上為 8 位元組，386 上為 4 位元組）。",
+  "config.memory.severity.description": "欄位順序不最優（填充浪費或 GC 掃描順序）時的診斷嚴重性。",
+  "config.memory.enable.description": "啟用記憶體佈局分析：當欄位順序浪費填充位元組或對 GC 掃描不最優時，顯示診斷和 CodeLens。",
+  "command.optimizeLayout.title": "優化記憶體佈局"
 }

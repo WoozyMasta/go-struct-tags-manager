@@ -21,5 +21,9 @@
   "command.sortAndAlignTags.title": "Sort & Align Struct Field Tags",
   "command.sortTagsAll.title": "Sort Struct Field Tags in File",
   "command.alignTagsAll.title": "Align Struct Field Tags in File",
-  "command.sortAndAlignTagsAll.title": "Sort & Align Struct Field Tags in File"
+  "command.sortAndAlignTagsAll.title": "Sort & Align Struct Field Tags in File",
+  "command.optimizeLayout.title": "Optimize Memory Layout",
+  "config.memory.enable.description": "Enable memory layout analysis: show diagnostics and CodeLens when struct field order wastes padding bytes or is suboptimal for GC scanning.",
+  "config.memory.severity.description": "Diagnostic severity for suboptimal struct field ordering (padding waste or GC scan order).",
+  "config.memory.architecture.description": "Target architecture for Go memory layout calculations. Affects pointer size (8 bytes on amd64/arm64, 4 bytes on 386)."
 }

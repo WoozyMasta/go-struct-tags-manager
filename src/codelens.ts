@@ -1,7 +1,14 @@
 import * as vscode from 'vscode'
-import { parseStructs } from './parser'
-import { t } from './i18n'
-import { TransformMode } from './engine'
+import { parseStructs, parseStructsWithFields } from './parser'
+import { t, tf } from './i18n'
+import {
+  TransformMode,
+  structNeedsTransform,
+  readSortOptions,
+  readAlignColumnThreshold,
+  readAlignMaxColumnGap,
+} from './engine'
+import { optimalOrder, Architecture } from './memory'
 
 interface LensAction {
   title: string
@@ -64,7 +71,9 @@ export class TagCodeLensProvider implements vscode.CodeLensProvider {
     this.configListener = vscode.workspace.onDidChangeConfiguration((e) => {
       if (
         e.affectsConfiguration('goStructTags.autoSortOnSave') ||
-        e.affectsConfiguration('goStructTags.autoAlignOnSave')
+        e.affectsConfiguration('goStructTags.autoAlignOnSave') ||
+        e.affectsConfiguration('goStructTags.memory.enable') ||
+        e.affectsConfiguration('goStructTags.memory.architecture')
       ) {
         this.onDidChangeEmitter.fire()
       }
@@ -76,10 +85,6 @@ export class TagCodeLensProvider implements vscode.CodeLensProvider {
     this.onDidChangeEmitter.dispose()
   }
 
-  /**
-   * @param document - The document being displayed; only Go files produce lenses.
-   * @returns One set of three lenses per struct that contains at least one tagged field.
-   */
   provideCodeLenses(document: vscode.TextDocument): vscode.CodeLens[] {
     if (document.languageId !== 'go') {
       return []
@@ -94,6 +99,10 @@ export class TagCodeLensProvider implements vscode.CodeLensProvider {
     const structs = parseStructs(document)
     const lenses: vscode.CodeLens[] = []
     const actions = actionsFromSettings()
+    const lines = document.getText().split('\n')
+    const opts = readSortOptions()
+    const columnThreshold = readAlignColumnThreshold()
+    const maxColumnGap = readAlignMaxColumnGap()
 
     for (const s of structs) {
       if (s.fields.length === 0) {
@@ -104,10 +113,52 @@ export class TagCodeLensProvider implements vscode.CodeLensProvider {
       const arg: StructArg = { startLine: s.startLine, endLine: s.endLine }
 
       for (const action of actions) {
+        if (
+          !structNeedsTransform(
+            s,
+            action.mode,
+            lines,
+            opts,
+            columnThreshold,
+            maxColumnGap,
+          )
+        ) {
+          continue
+        }
         lenses.push(
           new vscode.CodeLens(lineRange, {
             title: action.title,
             command: action.command,
+            arguments: [arg],
+          }),
+        )
+      }
+    }
+
+    const cfg = vscode.workspace.getConfiguration('goStructTags')
+    if (cfg.get<boolean>('memory.enable') ?? true) {
+      const arch = (cfg.get<string>('memory.architecture') ??
+        'amd64') as Architecture
+      const allStructs = parseStructsWithFields(document)
+
+      for (const s of allStructs) {
+        if (s.noReorder || s.allFields.length < 2) {
+          continue
+        }
+        const result = optimalOrder(s.allFields, arch)
+        if (!result.reordered) {
+          continue
+        }
+        const lineRange = new vscode.Range(s.startLine, 0, s.startLine, 0)
+        const arg: StructArg = { startLine: s.startLine, endLine: s.endLine }
+        const title =
+          result.bytesSaved > 0
+            ? tf('Optimize layout (save {0} bytes)', result.bytesSaved)
+            : t('Optimize field order')
+        lenses.push(
+          new vscode.CodeLens(lineRange, {
+            title,
+            command: 'goStructTags.optimizeLayout',
             arguments: [arg],
           }),
         )

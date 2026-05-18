@@ -21,5 +21,9 @@
   "command.sortAndAlignTags.title": "구조체 필드 태그 정렬 및 정렬(alignment)",
   "command.sortTagsAll.title": "파일의 구조체 필드 태그 정렬",
   "command.alignTagsAll.title": "파일의 구조체 필드 태그 정렬(alignment)",
-  "command.sortAndAlignTagsAll.title": "파일의 구조체 필드 태그 정렬 및 정렬(alignment)"
+  "command.sortAndAlignTagsAll.title": "파일의 구조체 필드 태그 정렬 및 정렬(alignment)",
+  "config.memory.architecture.description": "Go 메모리 레이아웃 계산을 위한 대상 아키텍처. 포인터 크기에 영향을 미칩니다(amd64/arm64에서 8바이트, 386에서 4바이트).",
+  "config.memory.severity.description": "최적이 아닌 필드 순서(패딩 낭비 또는 GC 스캔 순서)에 대한 진단 심각도.",
+  "config.memory.enable.description": "메모리 레이아웃 분석 활성화: 필드 순서가 패딩 바이트를 낭비하거나 GC 스캔에 최적이 아닌 경우 진단 및 CodeLens를 표시합니다.",
+  "command.optimizeLayout.title": "메모리 레이아웃 최적화"
 }

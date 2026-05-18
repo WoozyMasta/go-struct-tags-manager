@@ -1,5 +1,90 @@
 import { GoStruct, StructField, TagPair } from './parser'
 
+// Matches a field line: leading whitespace, identifier, whitespace, then a type token.
+const reFieldName = /^\s{1,}(\w[\w\d]*)\s+\S/
+
+interface FieldBlock {
+  name: string
+  lines: string[]
+}
+
+/**
+ * Reorders struct field lines to match `targetOrder`, moving attached comment lines
+ * (those immediately preceding the field with no blank line between) together with
+ * their field. Blank lines between field groups are dropped after reordering.
+ *
+ * @param allLines - All document lines.
+ * @param startLine - 0-based index of the `type X struct {` line.
+ * @param endLine - 0-based index of the closing `}` line.
+ * @param targetOrder - Field names in the desired order.
+ * @returns Replacement lines for the struct body (i.e. for `startLine+1` to `endLine-1`).
+ */
+export function reorderFields(
+  allLines: string[],
+  startLine: number,
+  endLine: number,
+  targetOrder: string[],
+): string[] {
+  const bodyLines = allLines.slice(startLine + 1, endLine)
+  const orderIndex = new Map(targetOrder.map((n, i) => [n, i]))
+
+  const blocks: FieldBlock[] = []
+  let pendingComments: string[] = []
+  let depth = 0
+
+  for (const line of bodyLines) {
+    if (depth > 0) {
+      // Inside a nested struct/interface body — accumulate into the current block
+      blocks[blocks.length - 1].lines.push(line)
+      for (const ch of line) {
+        if (ch === '{') {
+          depth++
+        } else if (ch === '}') {
+          depth--
+        }
+      }
+      continue
+    }
+
+    const trimmed = line.trim()
+    if (trimmed === '') {
+      pendingComments = []
+      continue
+    }
+    if (trimmed.startsWith('//')) {
+      pendingComments.push(line)
+      continue
+    }
+
+    // Use matched name for known fields; empty string for embedded types or
+    // other constructs that don't match — they sort to end, preserving order.
+    const m = reFieldName.exec(line)
+    blocks.push({ name: m ? m[1] : '', lines: [...pendingComments, line] })
+    pendingComments = []
+
+    // Detect if this line opens a nested block (e.g. `Field struct {`)
+    for (const ch of line) {
+      if (ch === '{') {
+        depth++
+      } else if (ch === '}') {
+        depth--
+      }
+    }
+  }
+
+  blocks.sort((a, b) => {
+    const ai = orderIndex.get(a.name) ?? Number.MAX_SAFE_INTEGER
+    const bi = orderIndex.get(b.name) ?? Number.MAX_SAFE_INTEGER
+    return ai - bi
+  })
+
+  const result: string[] = []
+  for (const block of blocks) {
+    result.push(...block.lines)
+  }
+  return result
+}
+
 /** Configuration for the sort operation, read from workspace settings on each invocation. */
 export interface SortOptions {
   /**

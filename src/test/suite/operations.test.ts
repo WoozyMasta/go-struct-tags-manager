@@ -6,6 +6,7 @@ import {
   sortFieldTags,
   findAlignmentGroups,
   alignGroup,
+  reorderFields,
 } from '../../operations'
 
 function field(line: number, ...tags: [string, string][]): StructField {
@@ -295,6 +296,98 @@ suite('alignGroup', () => {
     assert.strictEqual(
       withoutLimit.get(5),
       'a:"x" ' + ' '.repeat(21) + ' target:"z"',
+    )
+  })
+})
+
+suite('reorderFields', () => {
+  function lines(...src: string[]): string[] {
+    return src
+  }
+
+  test('reorders simple fields by target order', () => {
+    const src = lines('type T struct {', '\tB byte', '\tX int64', '}')
+    const result = reorderFields(src, 0, 3, ['X', 'B'])
+    assert.deepStrictEqual(result, ['\tX int64', '\tB byte'])
+  })
+
+  test('embedded type (no explicit type) is preserved, sorts to end', () => {
+    const src = lines('type T struct {', '\tEmbedded', '\tX int64', '}')
+    const result = reorderFields(src, 0, 3, ['X'])
+    // X is known → index 0; Embedded has no name match → MAX_SAFE_INTEGER → end
+    assert.deepStrictEqual(result, ['\tX int64', '\tEmbedded'])
+  })
+
+  test('inline anonymous struct is kept intact as a single block', () => {
+    const src = lines(
+      'type T struct {',
+      '\tB byte',
+      '\tInner struct {',
+      '\t\tID   int64',
+      '\t\tName string',
+      '\t}',
+      '\tX int64',
+      '}',
+    )
+    // Only B and X are in allFields (Inner skipped by parseAnyFieldLine)
+    // orderedNames: ['X', 'B'] — X first (larger alignment/size at same alignment)
+    const result = reorderFields(src, 0, 7, ['X', 'B'])
+    assert.deepStrictEqual(result, [
+      '\tX int64',
+      '\tB byte',
+      // Inner block: not in orderedNames → MAX_SAFE_INTEGER → after sorted fields
+      '\tInner struct {',
+      '\t\tID   int64',
+      '\t\tName string',
+      '\t}',
+    ])
+  })
+
+  test('inline struct body lines are not treated as individual sortable fields', () => {
+    const src = lines(
+      'type T struct {',
+      '\tProfile struct {',
+      '\t\tID   int64',
+      '\t\tName string',
+      '\t}',
+      '\tActive bool',
+      '}',
+    )
+    const result = reorderFields(src, 0, 6, ['Active'])
+    // Active comes first; Profile (not in order) → end with its full body
+    assert.deepStrictEqual(result, [
+      '\tActive bool',
+      '\tProfile struct {',
+      '\t\tID   int64',
+      '\t\tName string',
+      '\t}',
+    ])
+  })
+
+  test('closing brace of inline struct is not lost', () => {
+    const src = lines(
+      'type T struct {',
+      '\tA string',
+      '\tNested struct {',
+      '\t\tX int',
+      '\t}',
+      '\tB string',
+      '}',
+    )
+    const result = reorderFields(src, 0, 6, ['A', 'B'])
+    // Nested block (not in orderedNames) goes to end intact:
+    // declaration → inner field → closing brace must appear in that order
+    const nestedIdx = result.indexOf('\tNested struct {')
+    const innerIdx = result.indexOf('\t\tX int')
+    const closingIdx = result.indexOf('\t}')
+    assert.ok(nestedIdx >= 0, 'Nested struct declaration must be preserved')
+    assert.ok(
+      innerIdx > nestedIdx,
+      'inner field must follow the Nested declaration',
+    )
+    assert.ok(
+      closingIdx > innerIdx,
+      'closing brace must follow the inner field',
     )
   })
 })

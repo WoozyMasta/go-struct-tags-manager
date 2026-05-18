@@ -107,6 +107,57 @@ Two settings control which tags get dedicated columns
 and how wide the gaps are allowed to grow -
 see [`alignColumnThreshold`](#settings) and [`alignMaxColumnGap`](#settings).
 
+### Memory Layout Analysis
+
+Analyses Go struct field ordering for memory efficiency
+and reports problems when the current order wastes space
+or is suboptimal for the garbage collector.
+
+Diagnostics appear in the Problems panel
+and as squiggly underlines on the struct declaration line:
+
+* _"Memory: X bytes wasted in padding — reorder fields to save"_ - fields
+  are ordered so the Go runtime must insert alignment padding between them.
+  Placing larger-aligned fields first eliminates the wasted bytes.
+* _"Memory: pointer-bearing fields should precede non-pointer fields"_ -
+  fields that contain pointers (slices, strings, maps, interfaces, raw pointers)
+  should appear before plain scalars at the same alignment level
+  to minimize the GC scan range, even when no padding would be saved.
+
+An Optimize layout CodeLens button appears above any struct that would benefit:
+
+```txt
+Optimize layout (save 8 bytes)  |  Sort & Align Tags  |  Sort Tags  |  Align Tags
+type UserProfile struct {
+```
+
+Clicking it rewrites the field order in-place,
+without touching tags or comments.
+
+To suppress analysis for one struct,
+add a comment on the declaration line or anywhere inside the body:
+
+```go
+type LegacyRecord struct { // go-struct-tags:no-reorder
+    B byte
+    X int64
+}
+
+// betteralign:ignore is also accepted as an alias:
+type Another struct { // betteralign:ignore
+    B byte
+    X int64
+}
+```
+
+The sort order follows four criteria
+(matching [betteralign](https://github.com/dkorunic/betteralign)):
+
+1. Zero-sized fields (`[0]T`) first — avoids end-of-struct address aliasing.
+1. Higher alignment first — reduces inter-field padding.
+1. Pointer-bearing fields before plain scalars — minimizes GC scan range.
+1. Larger size first within the same alignment tier.
+
 ### Normalize Tags
 
 Both Sort and Align automatically normalize tags:
@@ -138,6 +189,9 @@ All commands are available in the Command Palette
   apply alignment to all structs in the file
 * **Sort & Align Struct Field Tags in File** -
   apply sort & align to all structs in the file
+* **Optimize Memory Layout** -
+  reorder fields of the struct at cursor for optimal memory alignment
+  and GC scan range
 
 ## Settings
 
@@ -176,6 +230,18 @@ All commands are available in the Command Palette
 * **`goStructTags.colors.separator`** `string` -
   override color for tag separators (`,`).  
   _Leave empty to use theme color._
+* **`goStructTags.memory.enable`** `boolean` -
+  enable memory layout analysis: show diagnostics and CodeLens when
+  struct field order wastes padding bytes or is suboptimal for GC scanning.  
+  _Default: `true`._
+* **`goStructTags.memory.severity`**
+  `"hint" | "information" | "warning" | "error"` -
+  diagnostic severity level for suboptimal struct field ordering.  
+  _Default: `"information"`._
+* **`goStructTags.memory.architecture`** `"amd64" | "arm64" | "386"` -
+  target architecture for memory layout calculations.
+  Affects pointer size (8 bytes on amd64/arm64, 4 bytes on 386).  
+  _Default: `"amd64"`._
 
 ### Example configuration
 
@@ -193,6 +259,18 @@ All commands are available in the Command Palette
 
 Color overrides accept any CSS color value (`#rrggbb`, `rgba(...)`,
 theme token color, etc.).
+
+## Ignored Files
+
+The extension silently skips the following files -
+no diagnostics, no CodeLens, no auto-sort or auto-align on save:
+
+* Test files - any file whose name ends with `_test.go`.
+* Generated files by name suffix - files ending with
+  `_generated.go`, `_gen.go`, `.gen.go`, `.pb.go`, or `.pb.gw.go`.
+* Generated files by comment - files whose first 10 lines contain a line
+  matching `Code generated .* DO NOT EDIT` (the standard marker written by
+  `protoc-gen-go`, `go generate`, `stringer` and similar tools).
 
 ## Theme Compatibility
 

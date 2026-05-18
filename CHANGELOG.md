@@ -13,6 +13,24 @@ and this project adheres to [Semantic Versioning][].
 ### Removed
 -->
 
+## [0.4.0][] - 2026-05-19
+
+### Added
+
+* Memory layout analysis: diagnostics and a CodeLens action report structs
+  whose field order wastes padding bytes or is suboptimal for the GC scan range.
+* Optimize Memory Layout command and CodeLens button
+  to reorder struct fields in-place for optimal alignment and GC ptrdata.
+* `goStructTags.memory.*` settings.
+
+### Changed
+
+* Sort, Align, and Sort & Align CodeLens actions are hidden
+  when the struct's tags are already in canonical order.
+* Generated and test files are silently skipped by all features.
+
+[0.4.0]: https://github.com/WoozyMasta/go-struct-tags-manager/compare/0.3.1...0.4.0
+
 ## [0.3.1][] - 2026-05-15
 
 ### Fixed

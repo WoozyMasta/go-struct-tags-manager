@@ -21,5 +21,9 @@
   "command.sortAndAlignTags.title": "Ordenar y alinear etiquetas de campos de struct",
   "command.sortTagsAll.title": "Ordenar etiquetas de campos de struct en el archivo",
   "command.alignTagsAll.title": "Alinear etiquetas de campos de struct en el archivo",
-  "command.sortAndAlignTagsAll.title": "Ordenar y alinear etiquetas de campos de struct en el archivo"
+  "command.sortAndAlignTagsAll.title": "Ordenar y alinear etiquetas de campos de struct en el archivo",
+  "config.memory.architecture.description": "Arquitectura destino para los calculos de disposicion en memoria de Go. Afecta al tamano del puntero (8 bytes en amd64/arm64, 4 bytes en 386).",
+  "config.memory.severity.description": "Gravedad del diagnostico para el orden suboptimo de campos (desperdicio de relleno o orden de escaneo GC).",
+  "config.memory.enable.description": "Activar el analisis de disposicion en memoria: mostrar diagnosticos y CodeLens cuando el orden de los campos desperdicia bytes de relleno o es suboptimo para el GC.",
+  "command.optimizeLayout.title": "Optimizar disposicion en memoria"
 }

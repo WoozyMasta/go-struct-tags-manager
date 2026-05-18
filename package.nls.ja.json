@@ -18,8 +18,12 @@
   "command.category": "Go Struct Tags Manager",
   "command.sortTags.title": "構造体フィールドタグを並び替え",
   "command.alignTags.title": "構造体フィールドタグを位置揃え",
-  "command.sortAndAlignTags.title": "構造体フィールドタグを並び替え & 位置揃え",
+  "command.sortAndAlignTags.title": "構造体フィールドタグを並び替え \u0026 位置揃え",
   "command.sortTagsAll.title": "ファイル内の構造体フィールドタグを並び替え",
   "command.alignTagsAll.title": "ファイル内の構造体フィールドタグを位置揃え",
-  "command.sortAndAlignTagsAll.title": "ファイル内の構造体フィールドタグを並び替え & 位置揃え"
+  "command.sortAndAlignTagsAll.title": "ファイル内の構造体フィールドタグを並び替え \u0026 位置揃え",
+  "config.memory.architecture.description": "Goのメモリレイアウト計算のターゲットアーキテクチャ。ポインタサイズに影響します（amd64/arm64では8バイト、386では4バイト）。",
+  "config.memory.severity.description": "フィールド順序が最適でない場合（パディングの無駄またはGCスキャン順序）の診断の重大度。",
+  "config.memory.enable.description": "メモリレイアウト分析を有効にする: フィールドの順序がパディングバイトを無駄にするか、GCスキャンに対して最適でない場合に診断とCodeLensを表示します。",
+  "command.optimizeLayout.title": "メモリレイアウトを最適化"
 }

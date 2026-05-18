@@ -91,6 +91,32 @@
           "type": "string",
           "default": "",
           "description": "%config.colors.separator.description%"
+        },
+        "goStructTags.memory.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "%config.memory.enable.description%"
+        },
+        "goStructTags.memory.severity": {
+          "type": "string",
+          "enum": [
+            "hint",
+            "information",
+            "warning",
+            "error"
+          ],
+          "default": "information",
+          "description": "%config.memory.severity.description%"
+        },
+        "goStructTags.memory.architecture": {
+          "type": "string",
+          "enum": [
+            "amd64",
+            "arm64",
+            "386"
+          ],
+          "default": "amd64",
+          "description": "%config.memory.architecture.description%"
         }
       }
     },
@@ -123,6 +149,11 @@
       {
         "command": "goStructTags.sortAndAlignTagsAll",
         "title": "%command.sortAndAlignTagsAll.title%",
+        "category": "%command.category%"
+      },
+      {
+        "command": "goStructTags.optimizeLayout",
+        "title": "%command.optimizeLayout.title%",
         "category": "%command.category%"
       }
     ],

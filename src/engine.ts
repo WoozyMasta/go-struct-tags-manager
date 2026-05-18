@@ -50,6 +50,41 @@ export function findStructBySpan(
   )
 }
 
+/**
+ * Returns true when applying `mode` to `struct` would produce at least one tag change.
+ * Used by CodeLensProvider to skip actions that would be no-ops.
+ */
+export function structNeedsTransform(
+  struct: GoStruct,
+  mode: TransformMode,
+  lines: string[],
+  opts: SortOptions,
+  columnThreshold: number,
+  maxColumnGap: number,
+): boolean {
+  if (struct.fields.length === 0) {
+    return false
+  }
+  const byLine = projectTagsByLine(
+    struct,
+    mode,
+    lines,
+    opts,
+    columnThreshold,
+    maxColumnGap,
+  )
+  for (const field of struct.fields) {
+    const next = byLine.get(field.line)
+    if (next === undefined) {
+      continue
+    }
+    if (lines[field.line].slice(field.tagStart, field.tagEnd) !== next) {
+      return true
+    }
+  }
+  return false
+}
+
 export function buildEdits(
   document: vscode.TextDocument,
   mode: TransformMode,

@@ -18,8 +18,12 @@
   "command.category": "Go Struct Tags Manager",
   "command.sortTags.title": "Struct-Feld-Tags sortieren",
   "command.alignTags.title": "Struct-Feld-Tags ausrichten",
-  "command.sortAndAlignTags.title": "Struct-Feld-Tags sortieren & ausrichten",
+  "command.sortAndAlignTags.title": "Struct-Feld-Tags sortieren \u0026 ausrichten",
   "command.sortTagsAll.title": "Struct-Feld-Tags in Datei sortieren",
   "command.alignTagsAll.title": "Struct-Feld-Tags in Datei ausrichten",
-  "command.sortAndAlignTagsAll.title": "Struct-Feld-Tags in Datei sortieren & ausrichten"
+  "command.sortAndAlignTagsAll.title": "Struct-Feld-Tags in Datei sortieren \u0026 ausrichten",
+  "config.memory.architecture.description": "Zielarchitektur fur Go-Speicherlayout-Berechnungen. Beeinflusst die Zeigergroesse (8 Bytes auf amd64/arm64, 4 Bytes auf 386).",
+  "config.memory.severity.description": "Diagnoseschweregrad fur suboptimale Feldreihenfolge (Padding-Verschwendung oder GC-Scan-Reihenfolge).",
+  "config.memory.enable.description": "Speicherlayout-Analyse aktivieren: Diagnosen und CodeLens anzeigen, wenn die Feldreihenfolge Bytes verschwendet oder fur den GC suboptimal ist.",
+  "command.optimizeLayout.title": "Speicherlayout optimieren"
 }

@@ -1,4 +1,5 @@
 import * as vscode from 'vscode'
+import { FieldSpec } from './memory'
 
 /** A single `key:"value"` pair extracted from a struct tag. */
 export interface TagPair {
@@ -32,7 +33,57 @@ export interface GoStruct {
   fields: StructField[]
 }
 
+/** A Go struct field (tagged or not) with its source line and resolved type. */
+export interface GoField extends FieldSpec {
+  /** 0-based line index within the document. */
+  line: number
+}
+
+/** GoStruct extended with all fields (including untagged ones) for memory analysis. */
+export interface GoStructFull extends GoStruct {
+  /** All fields in source order, including those without tags. */
+  allFields: GoField[]
+  /**
+   * True when any line in the struct (declaration or body) contains
+   * `// go-struct-tags:no-reorder`, which suppresses memory analysis for the whole struct.
+   */
+  noReorder: boolean
+}
+
+const reNoReorder = /\/\/\s*(?:go-struct-tags:no-reorder|betteralign:ignore)/
+
 const reStructStart = /^\s*type\s+(\w+)\s+struct\s*\{/
+
+const GENERATED_SUFFIXES = [
+  '_generated.go',
+  '_gen.go',
+  '.gen.go',
+  '.pb.go',
+  '.pb.gw.go',
+]
+const reGeneratedComment = /Code generated .* DO NOT EDIT/
+
+/** Returns true for files that should be silently skipped (generated files, test files). */
+function isSkippedFile(document: vscode.TextDocument): boolean {
+  const name = document.fileName ?? ''
+  if (name.endsWith('_test.go')) {
+    return true
+  }
+  for (const suffix of GENERATED_SUFFIXES) {
+    if (name.endsWith(suffix)) {
+      return true
+    }
+  }
+  if (document.lineCount && document.lineAt) {
+    const scanLines = Math.min(document.lineCount, 10)
+    for (let i = 0; i < scanLines; i++) {
+      if (reGeneratedComment.test(document.lineAt(i).text)) {
+        return true
+      }
+    }
+  }
+  return false
+}
 const reTaggedField = /^(\s*\w[\w\d]*\s+\S[^`]*?)\s*(`[^`]+`)/
 const reTag = /(\w[\w-]*):"((?:[^"\\]|\\.)*)"/g
 
@@ -43,6 +94,9 @@ const reTag = /(\w[\w-]*):"((?:[^"\\]|\\.)*)"/g
  * @returns An array of structs, each containing only fields that carry at least one tag.
  */
 export function parseStructs(document: vscode.TextDocument): GoStruct[] {
+  if (isSkippedFile(document)) {
+    return []
+  }
   const lines = document.getText().split('\n')
   const structs: GoStruct[] = []
 
@@ -132,6 +186,119 @@ export function parseTags(raw: string): TagPair[] {
   }
 
   return pairs
+}
+
+// Matches any field line: leading whitespace, identifier, whitespace, type token.
+// Does NOT match embedded fields (no type token) or comment-only lines.
+const reAnyField = /^\s{1,}(\w[\w\d]*)\s+(\S+)/
+
+/**
+ * Attempts to parse a struct body line as a field with a type.
+ * Skips comment lines, blank lines, and inner struct declarations.
+ */
+function parseAnyFieldLine(line: string, lineIndex: number): GoField | null {
+  const trimmed = line.trimStart()
+  if (trimmed === '' || trimmed.startsWith('//')) {
+    return null
+  }
+  // Skip inner struct / interface declarations
+  if (
+    trimmed.includes('struct {') ||
+    trimmed.includes('struct{') ||
+    trimmed.includes('interface{')
+  ) {
+    return null
+  }
+
+  const m = reAnyField.exec(line)
+  if (!m) {
+    return null
+  }
+
+  return { name: m[1], typeName: m[2], line: lineIndex }
+}
+
+/**
+ * Parses all top-level struct definitions from a Go source document,
+ * including all fields (tagged and untagged) for memory layout analysis.
+ */
+export function parseStructsWithFields(
+  document: vscode.TextDocument,
+): GoStructFull[] {
+  if (isSkippedFile(document)) {
+    return []
+  }
+  const lines = document.getText().split('\n')
+  const structs: GoStructFull[] = []
+
+  for (let i = 0; i < lines.length; i++) {
+    const m = reStructStart.exec(lines[i])
+    if (!m) {
+      continue
+    }
+
+    const name = m[1]
+    const startLine = i
+    let depth = 1
+    let endLine = i
+
+    for (let j = i + 1; j < lines.length; j++) {
+      const trimmed = lines[j]
+      for (const ch of trimmed) {
+        if (ch === '{') {
+          depth++
+        } else if (ch === '}') {
+          depth--
+          if (depth === 0) {
+            endLine = j
+            break
+          }
+        }
+      }
+      if (depth === 0) {
+        break
+      }
+    }
+
+    const fields: StructField[] = []
+    const allFields: GoField[] = []
+    let noReorder = reNoReorder.test(lines[startLine])
+    let innerDepth = 0
+
+    for (let j = startLine + 1; j < endLine; j++) {
+      const line = lines[j]
+      if (!noReorder && reNoReorder.test(line)) {
+        noReorder = true
+      }
+
+      // Track brace depth so inner struct/interface bodies are not confused
+      // with top-level fields of this struct.
+      const wasAtTop = innerDepth === 0
+      for (const ch of line) {
+        if (ch === '{') {
+          innerDepth++
+        } else if (ch === '}') {
+          innerDepth--
+        }
+      }
+
+      if (wasAtTop) {
+        const tagged = parseFieldLine(line, j)
+        if (tagged) {
+          fields.push(tagged)
+        }
+        const any = parseAnyFieldLine(line, j)
+        if (any) {
+          allFields.push(any)
+        }
+      }
+    }
+
+    structs.push({ startLine, endLine, name, fields, allFields, noReorder })
+    i = endLine
+  }
+
+  return structs
 }
 
 /**

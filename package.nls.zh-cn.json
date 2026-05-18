@@ -21,5 +21,9 @@
   "command.sortAndAlignTags.title": "排序并对齐结构体字段标签",
   "command.sortTagsAll.title": "排序文件中的结构体字段标签",
   "command.alignTagsAll.title": "对齐文件中的结构体字段标签",
-  "command.sortAndAlignTagsAll.title": "排序并对齐文件中的结构体字段标签"
+  "command.sortAndAlignTagsAll.title": "排序并对齐文件中的结构体字段标签",
+  "config.memory.architecture.description": "Go 内存布局计算的目标架构。影响指针大小（amd64/arm64 上为 8 字节，386 上为 4 字节）。",
+  "config.memory.severity.description": "字段顺序不优化（填充浪费或 GC 扫描顺序）时的诊断严重级别。",
+  "config.memory.enable.description": "启用内存布局分析：当字段顺序浪费填充字节或对 GC 扫描不优化时，显示诊断和 CodeLens。",
+  "command.optimizeLayout.title": "优化内存布局"
 }

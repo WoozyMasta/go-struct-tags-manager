@@ -75,3 +75,20 @@ type Nested struct {
 		LastName  string `yaml:"last_name" json:"last_name" db:"last_name" validate:"required,min=1,max=100"`
 	}
 }
+
+// PaymentRecord demonstrates suboptimal field ordering that wastes memory.
+// bool fields between int64 fields create hidden padding.
+// Memory layout (suboptimal): Active(1)+pad(7)+Amount(8)+Refunded(1)+pad(7)+TxID(8)+Note(16) = 48 bytes, 14 wasted.
+// After optimize: Amount(8)+TxID(8)+Note(16)+Active(1)+Refunded(1)+pad(6) = 40 bytes.
+// Expected: CodeLens "Optimize layout (save 14 bytes)" + diagnostic hint.
+type PaymentRecord struct {
+	// Active is active
+	Active bool `db:"active"   json:"active"`
+	// Amount is amount
+	Amount int64 `db:"amount"   json:"amount"`
+	// Refunded
+	// is refunded
+	Refunded bool   `db:"refunded" json:"refunded"`       // some comment
+	TxID     int64  `db:"tx_id"    json:"tx_id"`          // TxID is TxID
+	Note     string `db:"note"     json:"note,omitempty"` // Note is note
+}

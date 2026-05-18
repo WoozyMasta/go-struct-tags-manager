@@ -21,5 +21,9 @@
   "command.sortAndAlignTags.title": "Ordenar e alinhar tags de campos de struct",
   "command.sortTagsAll.title": "Ordenar tags de campos de struct no arquivo",
   "command.alignTagsAll.title": "Alinhar tags de campos de struct no arquivo",
-  "command.sortAndAlignTagsAll.title": "Ordenar e alinhar tags de campos de struct no arquivo"
+  "command.sortAndAlignTagsAll.title": "Ordenar e alinhar tags de campos de struct no arquivo",
+  "config.memory.architecture.description": "Arquitetura alvo para calculos de layout de memoria Go. Afeta o tamanho do ponteiro (8 bytes em amd64/arm64, 4 bytes em 386).",
+  "config.memory.severity.description": "Severidade do diagnostico para ordem de campos subotima (desperdicio de padding ou ordem de varredura GC).",
+  "config.memory.enable.description": "Ativar analise de layout de memoria: mostrar diagnosticos e CodeLens quando a ordem dos campos desperdiça bytes de padding ou e subotima para o GC.",
+  "command.optimizeLayout.title": "Otimizar layout de memoria"
 }

@@ -5,8 +5,10 @@ import {
   findStructAtLine,
   findStructBySpan,
 } from '../engine'
-import { parseStructs } from '../parser'
+import { parseStructs, parseStructsWithFields } from '../parser'
 import { StructArg } from '../codelens'
+import { optimalOrder, Architecture } from '../memory'
+import { reorderFields } from '../operations'
 
 export function registerCommands(context: vscode.ExtensionContext): void {
   context.subscriptions.push(
@@ -33,6 +35,10 @@ export function registerCommands(context: vscode.ExtensionContext): void {
     vscode.commands.registerCommand(
       'goStructTags.sortAndAlignTagsAll',
       (doc?: vscode.TextDocument) => runAllMode('sort-align', doc),
+    ),
+    vscode.commands.registerCommand(
+      'goStructTags.optimizeLayout',
+      (arg?: StructArg) => runOptimizeLayout(arg),
     ),
   )
 }
@@ -111,6 +117,52 @@ function modeFromSettings(): TransformMode | undefined {
     return 'align'
   }
   return undefined
+}
+
+async function runOptimizeLayout(arg?: StructArg): Promise<void> {
+  const editor = vscode.window.activeTextEditor
+  if (!editor || editor.document.languageId !== 'go') {
+    return
+  }
+
+  const structs = parseStructsWithFields(editor.document)
+  const target =
+    arg !== undefined
+      ? structs.find(
+          (s) => s.startLine === arg.startLine && s.endLine === arg.endLine,
+        )
+      : structs.find(
+          (s) =>
+            s.startLine <= editor.selection.active.line &&
+            s.endLine >= editor.selection.active.line,
+        )
+
+  if (!target || target.noReorder || target.allFields.length < 2) {
+    return
+  }
+
+  const cfg = vscode.workspace.getConfiguration('goStructTags')
+  const arch = (cfg.get<string>('memory.architecture') ??
+    'amd64') as Architecture
+  const result = optimalOrder(target.allFields, arch)
+  if (!result.reordered) {
+    return
+  }
+
+  const lines = editor.document.getText().split('\n')
+  const newBodyLines = reorderFields(
+    lines,
+    target.startLine,
+    target.endLine,
+    result.orderedNames,
+  )
+
+  const startPos = new vscode.Position(target.startLine + 1, 0)
+  const endPos = new vscode.Position(target.endLine, 0)
+  const range = new vscode.Range(startPos, endPos)
+  const newText = newBodyLines.join('\n') + '\n'
+
+  await editor.edit((builder) => builder.replace(range, newText))
 }
 
 async function applyEditorEdits(
